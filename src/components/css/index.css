@@ -1,0 +1,180 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+#mainview {
+  margin-top:50px;
+  margin-bottom:100px;
+}
+
+a:hover{
+  text-decoration: none;
+}
+
+.navbar {
+  border-radius: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+.jumbotron {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.thankyoubox{
+  margin-top:100px;
+}
+
+.cusmedia{
+  border: .5px solid silver;
+  padding: 5px;
+  margin-bottom: 10px;
+  color: black;
+  font-size: 0.8em;
+  text-decoration: none;
+}
+
+.cusmedia:hover{
+  border: .5px solid silver;
+  box-shadow: 2px 2px 2px 2px lightgrey;
+  margin-bottom: 10px;
+  color: black;
+  text-decoration: none;
+}
+
+.cusdetail {
+  padding-right: 15px;
+  border-right: .5px solid silver;
+}
+.cusdetailcol {
+  padding-right: 5px;
+}
+
+.cusdetailrow{
+  margin-right: 5px;  
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: .5px solid silver;
+}
+
+.top-arrow {
+  color: #66bb6a;
+}
+
+.bottom-arrow {
+  color: red;
+}
+
+.top-arrow-return {
+  color: red;
+}
+
+.bottom-arrow-return {
+  color: #66bb6a;
+}
+
+/* Customer Detail CSS below */
+.capitalamount{
+  color:green;
+}
+
+.currentamount{
+  color:rgb(0, 195, 255);
+}
+
+/* Daily Collection */
+
+.collecth2{
+  margin-bottom: 30px !important;
+}
+
+.empty-span{
+  font-size: 1.3rem;
+  color:silver;
+}
+
+/* DateTimePicker Overrided CSS */
+.react-datepicker-wrapper {
+  width:100%;
+}
+
+.react-datepicker__input-container{
+  width:100%;
+}
+
+.react-datepicker-wrapper input {
+  display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+.react-datepicker-wrapper input:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+.react-datepicker{
+  width:200px;
+}
+
+.react-datepicker__month-container{
+  width:100%;
+  font-size:1.2rem;
+}
+
+.react-datepicker__close-icon {
+  display: block !important;
+}
+
+/* React Select CSS */
+
+.form-control-react-select{
+  display: block;
+  width: 100%;
+  height: 34px;    
+  padding:0px !important;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+  -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+  -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+.Select-control {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.Select.is-focused:not(.is-open) > .Select-control{
+    height:100% !important;
+}
+/* New Voucher CSS */
+
+.info-span{
+  font-size:8pt;
+  color:silver;
+}
