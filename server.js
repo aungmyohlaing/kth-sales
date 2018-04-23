@@ -30,7 +30,7 @@ db.once('open', function(){
 //   client.close();
 // });
 
-var port = process.env.DEV || 8080;
+//var port = process.env.DEV || 8080;
 
 // MongoDB Schema Model
 var user = require('./models/user');
@@ -667,6 +667,7 @@ router.route('/returnitems/update/customer')
 app.use('/api', router);
 
 //starts the server and listens for requests
-app.listen(port, function () {
-    console.log(`api running on port ${port}`);
+var server = app.listen(process.env.DEV || 8080, function () {
+    var port = server.address().port;
+    console.log('api now running on port', port);
 });
