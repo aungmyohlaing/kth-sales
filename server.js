@@ -30,7 +30,7 @@ db.once('open', function(){
 //   client.close();
 // });
 
-var port = process.env.DEV || 3001;;
+var port = process.env.DEV || 8080;
 
 // MongoDB Schema Model
 var user = require('./models/user');
