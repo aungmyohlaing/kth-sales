@@ -11,6 +11,5 @@
   "start_url": "./index.html",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff",
-  "proxy":"https://kth-ledger.herokuapp.com:5000"
+  "background_color": "#ffffff"
 }
