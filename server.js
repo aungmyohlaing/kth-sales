@@ -46,15 +46,15 @@ app.use(bodyParser.json());
 
 //To prevent errors from Cross Origin Resource Sharing, we will set 
 //our headers to allow CORS with middleware like so:
-app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
-    //and remove cacheing so we get the most recent
-    res.setHeader('Cache-Control', 'no-cache');
-    next();
-});
+// app.use(function (req, res, next) {
+//     res.setHeader('Access-Control-Allow-Origin', '*');
+//     // res.setHeader('Access-Control-Allow-Credentials', 'true');
+//     res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
+//     res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
+//     //and remove cacheing so we get the most recent
+//     res.setHeader('Cache-Control', 'no-cache');
+//     next();
+// });
 
 /**
  *  Authentication Router Path
@@ -669,7 +669,7 @@ router.route('/returnitems/update/customer')
 app.use('/api', router);
 
 //starts the server and listens for requests
-var server = app.listen(process.env.DEV || 3001, process.env.HOSTADD || '0.0.0.0', function () {
+var server = app.listen(process.env.DEV || 3001, function () {
     var port = server.address().port;
-    console.log('api now running on port', port);
+    console.log('api now running on port', port);   
 });
