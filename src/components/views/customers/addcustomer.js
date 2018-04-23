@@ -69,7 +69,7 @@ export default class Customer extends Component {
                 address2:this.state.address2
             }
     
-            axios.post('http://localhost:3001/api/customer',customers)
+            axios.post('/api/customer',customers)
             .then(res => {                
                 this.setState({showAlert:true});
                 this.onAlertDissmis();
