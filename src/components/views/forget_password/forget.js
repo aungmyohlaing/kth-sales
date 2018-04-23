@@ -62,13 +62,13 @@ export default class ForgetPassword extends Component {
             }
 
 
-            axios.post('http://localhost:3001/api/checkemail', paramemail)
+            axios.post('/api/checkemail', paramemail)
                 .then(res => {
                     if (res.data === null) {
                         this.setState({ showUserAlert: true });
                     }
                     else {
-                        axios.put('http://localhost:3001/api/resetpassword', updateparam)
+                        axios.put('/api/resetpassword', updateparam)
                         .then(res => {
                             console.log(res);
 

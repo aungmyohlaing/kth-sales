@@ -3,7 +3,7 @@ import axios from 'axios';
 export default service => ({
     get() {
         try {
-            return axios.get('http://192.168.1.44:3001/api/customer')
+            return axios.get('/api/customer')
                 .then(res => {
                     return res.data;
                 })
@@ -17,7 +17,7 @@ export default service => ({
         try {
             let customer = { customerid: v }
             
-            return axios.post('http://192.168.1.44:3001/api/customer/getById', customer)
+            return axios.post('/api/customer/getById', customer)
                 .then(res => {                    
                     return res.data;
                 })
@@ -31,7 +31,7 @@ export default service => ({
         try {
             let customer = {customerid: v}
             
-            return axios.post('http://192.168.1.44:3001/api/customer/getdaily', customer)
+            return axios.post('/api/customer/getdaily', customer)
             .then(res => {                
                 return res.data;
             })
@@ -45,7 +45,7 @@ export default service => ({
         try {
             let customer = {customerid: v}
             
-            return axios.post('http://192.168.1.44:3001/api/customer/getnewvoucher', customer)
+            return axios.post('/api/customer/getnewvoucher', customer)
             .then(res => {                
                 return res.data;
             })
@@ -59,7 +59,7 @@ export default service => ({
         try {
             let customer = {customerid: v}
             
-            return axios.post('http://192.168.1.44:3001/api/customer/getreturnitem', customer)
+            return axios.post('/api/customer/getreturnitem', customer)
             .then(res => {                
                 return res.data;
             })

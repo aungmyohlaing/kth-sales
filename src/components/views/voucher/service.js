@@ -5,7 +5,7 @@ export default Service =>({
         try{
             let newvoucher = object;
             
-            return axios.post('http://192.168.1.44:3001/api/newvoucher', newvoucher)
+            return axios.post('/api/newvoucher', newvoucher)
             .then(res => {
                 return res.data;
             })
@@ -19,7 +19,7 @@ export default Service =>({
         try {
             let customer = object;
 
-            return axios.put('http://192.168.1.44:3001/api/newvoucher/update/customer', customer)
+            return axios.put('/api/newvoucher/update/customer', customer)
             .then(res => {
                 return res.data;
             })
@@ -34,7 +34,7 @@ export default Service =>({
         try{
             let newvoucher = object;
             
-            return axios.post('http://192.168.1.44:3001/api/returnitems', newvoucher)
+            return axios.post('/api/returnitems', newvoucher)
             .then(res => {
                 return res.data;
             })
@@ -48,7 +48,7 @@ export default Service =>({
         try {
             let customer = object;
 
-            return axios.put('http://192.168.1.44:3001/api/returnitems/update/customer', customer)
+            return axios.put('/api/returnitems/update/customer', customer)
             .then(res => {
                 return res.data;
             })

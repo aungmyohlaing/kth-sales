@@ -4,6 +4,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var cors = require('cors');
 var bodyParser = require('body-parser');
+const path = require('path');
 
 var app = express();
 var router = express.Router();
@@ -22,7 +23,7 @@ mongoose.connect(process.env.ATLAS_CONSTR);
 var db = mongoose.connection;
 //bind error info
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function(){
+db.once('open', function () {
     console.log('Connected to DB');
 });
 
@@ -44,6 +45,8 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use(express.static(path.join(__dirname, 'build')));
+
 //To prevent errors from Cross Origin Resource Sharing, we will set 
 //our headers to allow CORS with middleware like so:
 // app.use(function (req, res, next) {
@@ -56,17 +59,25 @@ app.use(bodyParser.json());
 //     next();
 // });
 
+
+
+router.get('/', function (req, res) {
+    res.send({ message: 'API Initialized!' });
+    console.log('Api initialized');
+});
+
+
 /**
  *  Authentication Router Path
  */
 router.route('/auth')
     .post(function (req, res) {
-       
+
         var User = new user();
-        
+
         user.findOne({ username: req.body.username }, function (err, user) {
             if (err) res.send(err);
-            
+
             if (user !== null) {
                 let hashPwd = user.password;
                 var comparePwd = User.validPassword(req.body.password, hashPwd);
@@ -136,45 +147,45 @@ router.route('/home/topten')
  * Sales Board API
  */
 
- /**
- * Charts API Router
- */
+/**
+* Charts API Router
+*/
 
 router.route('/charts/thisyear')
-.post(function (req, res) {
-    newvoucher.aggregate([
-        {
-            "$project": {
-                "customerid": "$customerid",
-                "voucherdate": "$voucherdate",
-                "voucherno": "$voucherno",
-                "itemno": "$itemno",
-                "itemname": "$itemname",
-                "quantity": "$quantity",
-                "price": "$price",
-                "amount": "$amount",
-                "createdate": "$createdate",
-                "salesyear": { "$year": "$voucherdate" },
-                "salesmonth": { "$month": "$voucherdate" },
-                "salesday": { "$dayOfMonth": "$voucherdate" }
+    .post(function (req, res) {
+        newvoucher.aggregate([
+            {
+                "$project": {
+                    "customerid": "$customerid",
+                    "voucherdate": "$voucherdate",
+                    "voucherno": "$voucherno",
+                    "itemno": "$itemno",
+                    "itemname": "$itemname",
+                    "quantity": "$quantity",
+                    "price": "$price",
+                    "amount": "$amount",
+                    "createdate": "$createdate",
+                    "salesyear": { "$year": "$voucherdate" },
+                    "salesmonth": { "$month": "$voucherdate" },
+                    "salesday": { "$dayOfMonth": "$voucherdate" }
+                }
+            },
+            {
+                "$match": {
+                    "salesyear": parseInt(req.body.fullyear)
+                }
+            },
+            {
+                "$group": {
+                    "_id": { month: "$salesmonth" },
+                    "totalsales": { "$sum": "$amount" }
+                }
+            }], function (err, data) {
+                if (err) res.send(err);
+                res.json(data);
             }
-        },
-        {
-            "$match": {
-                "salesyear": parseInt(req.body.fullyear)
-            }
-        },
-        {
-            "$group": {
-                "_id": { month: "$salesmonth" },
-                "totalsales": { "$sum": "$amount" }
-            }
-        }], function (err, data) {
-            if (err) res.send(err);
-            res.json(data);
-        }
-    );
-});
+        );
+    });
 
 router.route('/home/yearly/totalsales')
     .post(function (req, res) {
@@ -207,20 +218,20 @@ router.route('/home/yearly/totalsales')
     });
 
 router.route('/home/monthly/totalsales')
-    .post(function (req, res) {        
+    .post(function (req, res) {
         newvoucher.aggregate([
             {
-                "$project": {                   
-                    "voucherdate": "$voucherdate",                    
+                "$project": {
+                    "voucherdate": "$voucherdate",
                     "amount": "$amount",
                     "salesyear": { "$year": "$voucherdate" },
                     "salesmonth": { "$month": "$voucherdate" },
                     "salesday": { "$dayOfMonth": "$voucherdate" }
                 }
-            },                     
+            },
             {
-                "$match": { "salesmonth": parseInt(req.body.currentmonth)}
-            }, 
+                "$match": { "salesmonth": parseInt(req.body.currentmonth) }
+            },
             {
                 "$group": {
                     "_id": null,
@@ -228,7 +239,7 @@ router.route('/home/monthly/totalsales')
                 }
             }], function (err, data) {
                 if (err) res.send(err);
-                
+
                 res.json(data);
             }
         );
@@ -274,45 +285,45 @@ router.route('/home/topselling')
  * Return Board API     
  */
 
- /**
- * Charts API Router
- */
+/**
+* Charts API Router
+*/
 
 router.route('/return/charts/thisyear')
-.post(function (req, res) {
-    returnitem.aggregate([
-        {
-            "$project": {
-                "customerid": "$customerid",
-                "voucherdate": "$voucherdate",
-                "voucherno": "$voucherno",
-                "itemno": "$itemno",
-                "itemname": "$itemname",
-                "quantity": "$quantity",
-                "price": "$price",
-                "amount": "$amount",
-                "createdate": "$createdate",
-                "returnyear": { "$year": "$returndate" },
-                "returnmonth": { "$month": "$returndate" },
-                "returnday": { "$dayOfMonth": "$returndate" }
+    .post(function (req, res) {
+        returnitem.aggregate([
+            {
+                "$project": {
+                    "customerid": "$customerid",
+                    "voucherdate": "$voucherdate",
+                    "voucherno": "$voucherno",
+                    "itemno": "$itemno",
+                    "itemname": "$itemname",
+                    "quantity": "$quantity",
+                    "price": "$price",
+                    "amount": "$amount",
+                    "createdate": "$createdate",
+                    "returnyear": { "$year": "$returndate" },
+                    "returnmonth": { "$month": "$returndate" },
+                    "returnday": { "$dayOfMonth": "$returndate" }
+                }
+            },
+            {
+                "$match": {
+                    "returnyear": parseInt(req.body.fullyear)
+                }
+            },
+            {
+                "$group": {
+                    "_id": { month: "$returnmonth" },
+                    "totalreturn": { "$sum": "$amount" }
+                }
+            }], function (err, data) {
+                if (err) res.send(err);
+                res.json(data);
             }
-        },
-        {
-            "$match": {
-                "returnyear": parseInt(req.body.fullyear)
-            }
-        },
-        {
-            "$group": {
-                "_id": { month: "$returnmonth" },
-                "totalreturn": { "$sum": "$amount" }
-            }
-        }], function (err, data) {
-            if (err) res.send(err);
-            res.json(data);
-        }
-    );
-});
+        );
+    });
 
 router.route('/home/monthly/totalreturn')
     .post(function (req, res) {
@@ -345,7 +356,7 @@ router.route('/home/monthly/totalreturn')
     });
 
 
-    router.route('/home/yearly/totalreturn')
+router.route('/home/yearly/totalreturn')
     .post(function (req, res) {
         returnitem.aggregate([
             {
@@ -375,10 +386,10 @@ router.route('/home/monthly/totalreturn')
         );
     });
 
-    /**
-     * Most Return Items API
-     */
-    router.route('/home/mostreturn')
+/**
+ * Most Return Items API
+ */
+router.route('/home/mostreturn')
     .post(function (req, res) {
         returnitem.aggregate([
             {
@@ -588,7 +599,7 @@ router.route('/dailycollection/update/customer')
 router.route('/newvoucher')
     .post(function (req, res) {
         var newVoucher = new newvoucher();
-        
+
         newVoucher.customerid = req.body.customerid;
         newVoucher.voucherdate = req.body.voucherdate;
         newVoucher.voucherno = req.body.voucherno;
@@ -668,8 +679,14 @@ router.route('/returnitems/update/customer')
 
 app.use('/api', router);
 
+app.get('*', function (req, res) {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
+
 //starts the server and listens for requests
 var server = app.listen(process.env.DEV || 3001, function () {
     var port = server.address().port;
-    console.log('api now running on port', port);   
+    console.log('api now running on port', port);
 });
+
+// app.listen(9000);

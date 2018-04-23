@@ -95,13 +95,13 @@ export default class register extends Component {
             }
 
 
-            axios.post('http://192.168.1.44:3001/api/checkuser', paramusername)
+            axios.post('/api/checkuser', paramusername)
                 .then(res => {                    
                     if (res.data !== null) {
                         this.setState({ showUserAlert: true });
                     }
                     else {
-                        axios.post('http://192.168.1.44:3001/api/users', users)
+                        axios.post('/api/users', users)
                             .then(res => {
                                 console.log(res);
                                 this.setState({ fullname: '', email: '', username: '', password: '', confirmPwd: '' });

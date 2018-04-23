@@ -3,7 +3,7 @@ import axios from 'axios';
 export default Service =>({
     get() {
         try {
-            return axios.get('http://192.168.1.44:3001/api/customer')
+            return axios.get('/api/customer')
                 .then(res => {
                     return res.data;
                 })
@@ -17,7 +17,7 @@ export default Service =>({
         try {
             let customer = { customerid: v }
             
-            return axios.post('http://192.168.1.44:3001/api/customer/getById', customer)
+            return axios.post('/api/customer/getById', customer)
                 .then(res => {                    
                     return res.data;
                 })
@@ -31,7 +31,7 @@ export default Service =>({
         try{
             let dailycollection = object;
 
-            return axios.post('http://192.168.1.44:3001/api/dailycollection', dailycollection)
+            return axios.post('/api/dailycollection', dailycollection)
                 .then(res => {                    
                     return res.data;
                 })
@@ -45,7 +45,7 @@ export default Service =>({
     update_customer(object){
         let currentamount = object;
         try{
-            return axios.put('http://192.168.1.44:3001/api/dailycollection/update/customer', currentamount)
+            return axios.put('/api/dailycollection/update/customer', currentamount)
                 .then(res => {                    
                     return res.data;
                 })

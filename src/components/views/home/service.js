@@ -4,7 +4,7 @@ export default Service => ({
     getTopTen() {
         try {
 
-            return axios.get('https://kth-ledger.herokuapp.com/api/home/topten')
+            return axios.get('/api/home/topten')
                 .then(res => {
                     return res.data;
                 })
@@ -18,7 +18,7 @@ export default Service => ({
     getThisYearChart(v) {
         try {
             let fullyear = { fullyear: v };          
-            return axios.post('https://kth-ledger.herokuapp.com/api/charts/thisyear', fullyear)
+            return axios.post('/api/charts/thisyear', fullyear)
                 .then(res => {                    
                     return res.data;
                 })
@@ -32,7 +32,7 @@ export default Service => ({
     getYearlyTotalSales(v){
         try {
             let currentyear = { currentyear: v };
-            return axios.post('https://kth-ledger.herokuapp.com/api/home/yearly/totalsales', currentyear)
+            return axios.post('/api/home/yearly/totalsales', currentyear)
             .then(res => {
                 return res.data;
             })
@@ -45,7 +45,7 @@ export default Service => ({
     getMonthlyTotalSales(v){
         try{
             let currentmonth = { currentmonth: v };
-            return axios.post('https://kth-ledger.herokuapp.com/api/home/monthly/totalsales', currentmonth)
+            return axios.post('/api/home/monthly/totalsales', currentmonth)
             .then(res => {
                 return res.data;
             })
@@ -59,7 +59,7 @@ export default Service => ({
     getMonthlyTopSelling(v){
         try {
             let currentmonth = { currentmonth: v };
-            return axios.post('https://kth-ledger.herokuapp.com/api/home/topselling', currentmonth)
+            return axios.post('/api/home/topselling', currentmonth)
             .then(res => {
                 return res.data;
             })
@@ -72,7 +72,7 @@ export default Service => ({
     getMonthlyTotalReturn(v){
         try {
             let currentmonth = { currentmonth: v };
-            return axios.post('https://kth-ledger.herokuapp.com/api/home/monthly/totalreturn', currentmonth)
+            return axios.post('/api/home/monthly/totalreturn', currentmonth)
             .then(res => {
                 return res.data;
             })
@@ -85,7 +85,7 @@ export default Service => ({
     getYearlyTotalReturn(v){
         try {
             let currentyear = { currentyear: v };
-            return axios.post('https://kth-ledger.herokuapp.com/api/home/yearly/totalreturn', currentyear)
+            return axios.post('/api/home/yearly/totalreturn', currentyear)
             .then(res => {
                 return res.data;
             })
@@ -98,7 +98,7 @@ export default Service => ({
     getThisYearReturnChart(v) {
         try {
             let fullyear = { fullyear: v };          
-            return axios.post('https://kth-ledger.herokuapp.com/api/return/charts/thisyear', fullyear)
+            return axios.post('/api/return/charts/thisyear', fullyear)
                 .then(res => {                    
                     return res.data;
                 })
@@ -112,7 +112,7 @@ export default Service => ({
     getMonthlyMostReturnItems(v){
         try {
             let currentmonth = { currentmonth: v };
-            return axios.post('https://kth-ledger.herokuapp.com/api/home/mostreturn', currentmonth)
+            return axios.post('/api/home/mostreturn', currentmonth)
             .then(res => {
                 return res.data;
             })
