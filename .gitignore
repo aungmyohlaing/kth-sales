@@ -1,9 +1,19 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
 
 # Folder config file
 Desktop.ini
+
+# Dependency directories
+node_modules/
+jspm_packages/
+.vscode/
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
