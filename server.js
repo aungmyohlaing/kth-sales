@@ -2,6 +2,7 @@
 
 var express = require('express');
 var mongoose = require('mongoose');
+var cors = require('cors');
 var bodyParser = require('body-parser');
 
 var app = express();
@@ -39,6 +40,7 @@ var dailycollection = require('./models/collection');
 var newvoucher = require('./models/newvoucher');
 var returnitem = require('./models/returnitem');
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
