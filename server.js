@@ -669,7 +669,7 @@ router.route('/returnitems/update/customer')
 app.use('/api', router);
 
 //starts the server and listens for requests
-var server = app.listen(process.env.DEV || 8080, function () {
+var server = app.listen(process.env.DEV || 8080, process.env.HOST || '0.0.0.0', function () {
     var port = server.address().port;
     console.log('api now running on port', port);
 });

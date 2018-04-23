@@ -60,7 +60,7 @@ export default class login extends Component {
                 password: this.state.password
             }
 
-            axios.post('https://kth-ledger.herokuapp.com/api/auth', userdata)
+            axios.post('https://kth-ledger.herokuapp.com:8080/api/auth', userdata)
                 .then(res => {                    
                     if (res.data !== null) {
                         Storage(localStorage).set('loggedIn', true);
