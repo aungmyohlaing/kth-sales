@@ -684,7 +684,7 @@ app.get('*', function (req, res) {
 });
 
 //starts the server and listens for requests
-var server = app.listen(process.env.DEV || 3001, function () {
+var server = app.listen(process.env.DEV || 8080, function () {
     var port = server.address().port;
     console.log('api now running on port', port);
 });
