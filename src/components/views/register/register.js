@@ -5,6 +5,7 @@ import RouterLink from '../../commons/linkContainer';
 import axios from 'axios';
 import Storage from '../../../components/commons/localStogare';
 import Footer from '../../footer';
+import {Link} from 'react-router-dom';
 
 export default class register extends Component {
 
@@ -124,10 +125,10 @@ export default class register extends Component {
     render() {
         return (
             <div>
-                <Navbar inverse collapseOnSelect>
+                <Navbar inverse collapseOnSelect fluid>
                     <Navbar.Header>
                         <Navbar.Brand>
-                            KTH Ledger
+                            <Link to="/register">KTH</Link>
                         </Navbar.Brand>
                         <Navbar.Toggle />
                     </Navbar.Header>

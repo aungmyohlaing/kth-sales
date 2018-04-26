@@ -63,8 +63,8 @@ export default class Customer extends Component {
                 email:this.state.email,
                 mobile:this.state.mobile,
                 phone:this.state.phone,
-                salesamount: this.state.salesamount,
-                currentamount: this.state.salesamount,
+                salesamount: 0,
+                currentamount: 0,
                 address1:this.state.address1,
                 address2:this.state.address2
             }
@@ -194,20 +194,7 @@ export default class Customer extends Component {
                                                     <FormControl.Feedback />
                                                 </FormGroup>
                                             </Col>                                            
-                                        </Row>
-                                        <Row>
-                                            <Col xs={12} md={5} lg={5}>
-                                                <FormGroup>
-                                                    <ControlLabel>Sales Amount</ControlLabel>
-                                                    <FormControl name="salesamount" type="text" 
-                                                    value={this.state.salesamount}
-                                                    onChange={this.handleChange}
-                                                    placeholder="Enter Sales Amount" />
-
-                                                    <FormControl.Feedback />
-                                                </FormGroup>
-                                            </Col>                                                                                        
-                                        </Row>
+                                        </Row>                                        
                                         <Row>
                                             <Col xs={12} md={10} lg={10}>
                                                 <SaveAlert 

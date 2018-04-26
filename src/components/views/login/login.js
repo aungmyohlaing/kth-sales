@@ -6,6 +6,7 @@ import RouterLink from '../../commons/linkContainer';
 import Storage from '../../commons/localStogare';
 import Footer from '../../footer';
 import axios from 'axios';
+import {Link} from 'react-router-dom';
 
 export default class login extends Component {
 
@@ -32,7 +33,8 @@ export default class login extends Component {
      * Checke User already login or not?
     */
     componentDidMount(){
-        var loggedIn = Storage(localStorage).get('loggedIn');        
+        
+        var loggedIn = Storage().get('loggedIn');        
         if(loggedIn){
             this.props.history.push('/home');
         }
@@ -100,7 +102,7 @@ export default class login extends Component {
                 <Navbar inverse collapseOnSelect fluid>
                     <Navbar.Header>
                         <Navbar.Brand>
-                            KTH
+                            <Link to="/login">KTH</Link>
                         </Navbar.Brand>
                         <Navbar.Toggle />
                     </Navbar.Header>

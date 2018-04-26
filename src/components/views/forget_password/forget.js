@@ -6,6 +6,7 @@ import {
 import RouterLink from '../../commons/linkContainer';
 import axios from 'axios';
 import Footer from '../../footer';
+import {Link} from 'react-router-dom';
 
 export default class ForgetPassword extends Component {
 
@@ -113,10 +114,10 @@ export default class ForgetPassword extends Component {
 
         return (
             <div>
-                <Navbar inverse collapseOnSelect>
+                <Navbar inverse collapseOnSelect fluid>
                     <Navbar.Header>
                         <Navbar.Brand>
-                            KTH Ledger
+                        <Link to="/reset">KTH</Link>
                         </Navbar.Brand>
                         <Navbar.Toggle />
                     </Navbar.Header>

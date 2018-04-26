@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { PageHeader, Row, Col, Media, Image, Form, FormControl, FormGroup, InputGroup } from 'react-bootstrap';
-import { NavLink } from 'react-router-dom';
+import { PageHeader, Row, Form, FormControl, FormGroup, InputGroup } from 'react-bootstrap';
 import Service from './service';
 import Header from '../../header';
 import Footer from '../../footer';
-import userlogo from '../../images/user-placeholder.jpg';
+import UserCards from '../../commons/userCard';
 
 export default class CustomerList extends Component {
 
@@ -90,30 +89,9 @@ export default class CustomerList extends Component {
                             </InputGroup>
                         </FormGroup>
                     </Form>
-                    <Row>
-                        {
-                            this.state.searchresult.map(function (item) {
-                                return (
-                                    <Col key={item._id} sm={12} md={4} lg={3}>
-                                        <NavLink to={'/customer/detail/' + item._id}>
-                                            <Media className="cusmedia" href="#">
-                                                <Media.Left align="top">
-                                                    <Image width={64} height={64} src={userlogo} alt="Image" />
-                                                </Media.Left>
-                                                <Media.Body>
-                                                    <Media.Heading>{item.name}</Media.Heading>
-                                                    <p>
-                                                        Email: {item.email}<br />
-                                                        Mobile: {item.mobile}
-                                                    </p>
-                                                </Media.Body>
-                                            </Media>
-                                        </NavLink>
-                                    </Col>
-                                )
-                            })
-                        }
-
+                    <Row>          
+                        {/* Users Card Component */}
+                        <UserCards dataList={this.state.searchresult} />                                 
                     </Row>
                 </div>
                 <Footer/>
