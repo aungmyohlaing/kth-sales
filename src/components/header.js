@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Nav, Navbar, NavDropdown, MenuItem } from 'react-bootstrap';
+import { Nav, Navbar, NavDropdown, MenuItem, Image } from 'react-bootstrap';
 import RouterLink from '../components/commons/linkContainer';
 import Storage from '../components/commons/localStogare';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import usericon from '../components/images/man.png';
 
 
 export default class Home extends Component {
@@ -20,36 +21,39 @@ export default class Home extends Component {
     }
 
     render() {
+
         return (
-                <div>
+            <div>
                 <Navbar inverse collapseOnSelect fixedTop fluid>
                     <Navbar.Header>
-                        <Navbar.Brand >                            
+                        <Navbar.Brand >
                             {/* <RouterLink to='/home' cssClass='navbar-brand' >KTH</RouterLink> */}
                             <Link to="/home">KTH</Link>
                         </Navbar.Brand>
                         <Navbar.Toggle />
                     </Navbar.Header>
                     <Navbar.Collapse>
-                        <Nav >
-                            <NavDropdown eventKey={3} title="Customer" id="basic-nav-dropdown">                               
-                                <RouterLink to='/customer/list' role="menuitem" >Customer List </RouterLink>                              
+                        <Nav>
+                            <NavDropdown eventKey={3} title="Customer" id="basic-nav-dropdown">
+                                <RouterLink to='/customer/list' role="menuitem" >Customer List </RouterLink>
                                 <MenuItem divider />
-                                <RouterLink to='/customer/add' role="menuitem" >Add Customer</RouterLink>                               
-                            </NavDropdown>                            
-                        
+                                <RouterLink to='/customer/add' role="menuitem" >Add Customer</RouterLink>
+                            </NavDropdown>
                             <RouterLink to='/collection'>Collection</RouterLink>
-                        
                             <RouterLink to='/newvoucher'>Sales</RouterLink>
-                        
                             <RouterLink to='/returnitems'>Returns</RouterLink>
                         </Nav>
+
                         <Nav pullRight >
-                            <RouterLink to='/login' onclick={this.onLogout}>Logout</RouterLink>
+                            <NavDropdown eventKey={3} title={<div><Image src={usericon} responsive /></div>} id="user-nav-dropdown">
+                                <RouterLink to='/customer/list' role="menuitem" ><i className="fa fa-gear fa-fw"></i> Settings</RouterLink>
+                                <MenuItem divider />
+                                <RouterLink to='/login' onclick={this.onLogout}><i className="fa fa-sign-out fa-fw"></i> Logout</RouterLink>
+                            </NavDropdown>
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
-           </div>
+            </div>
         )
     }
 }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { PageHeader, Grid, Row, Col, Image, Form, FormGroup, FormControl, ControlLabel, Button, ButtonToolbar } from 'react-bootstrap';
 import Header from '../../header';
 import Footer from '../../footer';
-import userlogo from '../../images/user-placeholder.jpg';
+import userlogo from '../../images/businessman.png';
 import axios from 'axios';
 import SaveAlert from '../../commons/alert';
 

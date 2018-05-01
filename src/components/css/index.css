@@ -23,6 +23,13 @@ a:hover{
     padding-right: 10px;
 }
 
+
+/* Header User Icon Dropdown arrow hide */
+
+#user-nav-dropdown .caret {
+  display:none;
+}
+
 .thankyoubox{
   margin-top:100px;
 }
