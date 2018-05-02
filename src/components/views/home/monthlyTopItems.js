@@ -18,7 +18,7 @@ export default class monthlyTopItems extends Component {
     componentDidMount() {
         var self = this;
         var currentMonth = new Date().getMonth() + 1;
-        console.log('MOnthly Type', self.props.type);
+        
         if (self.props.type.toString().toLowerCase() === "selling") {
             /**
              * Load Top Selling Items

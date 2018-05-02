@@ -15,11 +15,11 @@ var env = require('dotenv').load();
  * Moogo DB Connection
  */
 
-// mongoose.connect('mongodb://192.168.1.44/kth');
+mongoose.connect('mongodb://192.168.1.44/kth');
 // mongoose.connect('mongodb://kth:WlPFZhgaiMSEuFoYXGHb73GbDX04vndb1GPwhBfeKxqC1swLqcDUWgdvpoeP7JKnBgXsEgD9QnkWLwFbvCVekw%3D%3D@kth.documents.azure.com:10255/?ssl=true&replicaSet=globaldb');
 
 // mongoose.connect(process.env.COSMOSDB_CONSTR+process.env.COSMOSDB_DBNAME+"?ssl=true&replicaSet=globaldb");
-mongoose.connect(process.env.ATLAS_CONSTR);
+//mongoose.connect(process.env.ATLAS_CONSTR);
 var db = mongoose.connection;
 //bind error info
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -591,6 +591,26 @@ router.route('/dailycollection/update/customer')
             });
         })
     });
+
+router.route('/dailycollection/getvouchers')
+    .post(function (req, res) {        
+        newvoucher.aggregate([
+            {
+                "$project": {             
+                    "customerid": "$customerid",       
+                    "voucherno": "$voucherno"
+                }
+            },
+            {
+                "$match": {
+                    "customerid": req.body.customerid
+                }
+            }
+        ], function (err, data) {
+            if (err) res.send(err);
+            res.json(data);
+        });
+    })
 
 /**
  * New Voucher Router

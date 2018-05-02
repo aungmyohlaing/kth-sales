@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, FormGroup, FormControl, Grid, Row, Col, ButtonToolbar, Button, ControlLabel } from 'react-bootstrap';
+import { Form, FormGroup, FormControl, Grid, Row, Col, ButtonToolbar, Button, ControlLabel, InputGroup } from 'react-bootstrap';
 import Service from './service';
 import DateTimePicker from '../../commons/datepicker';
 import moment from 'moment';
@@ -23,15 +23,19 @@ export default class CollectionForm extends Component {
                     address2: ''
                 }
             ],
+            voucherData: [{
+                customerid: '',
+                voucherno: ''
+            }],
             customerid: '',
-            voucher: '',
             amount: '',
             selectedDate: moment(),
             createDate: moment(),
             selectedOptions: '',
+            selectedVoucherOptions: '',
             selectValidation: null,
+            selectVoucherValidation: null,
             customerValidation: null,
-            voucherValidation: null,
             amountValidation: null,
             showAlert: false
         }
@@ -69,6 +73,23 @@ export default class CollectionForm extends Component {
             Service().getById(selectedOptions.value).then(res => {
                 this.setState({ customerById: res, voucherValidation: null, amountValidation: null, customerValidation: null });
             })
+
+            Service().getVocById(selectedOptions.value).then(res => {
+
+                this.setState({ voucherData: res });
+
+                console.log('Vouchers Data', this.state.voucherData);
+            })
+        }
+        //console.log(`Selected:`, this.state.selectedOptions.value);
+    }
+
+    selectedVoucherNoHandleChange = (selectedVoucherOptions) => {
+
+        this.setState({ selectedVoucherOptions, selectVoucherValidation: null });
+        if (selectedVoucherOptions === null || selectedVoucherOptions === undefined) {
+            //console.log('Selected Value Null');
+            this.setState({ selectedVoucherOptions: '' });
         }
         //console.log(`Selected:`, this.state.selectedOptions.value);
     }
@@ -84,8 +105,8 @@ export default class CollectionForm extends Component {
         if (this.state.selectedOptions === undefined || this.state.selectedOptions === '') {
             this.setState({ selectValidation: 'error' });
         }
-        else if (this.state.voucher === undefined || this.state.voucher === '') {
-            this.setState({ voucherValidation: 'error' });
+        else if (this.state.selectedVoucherOptions === undefined || this.state.selectedVoucherOptions === '') {
+            this.setState({ selectVoucherValidation: 'error' });
         }
         else if (this.state.amount === undefined || this.state.amount === '') {
             this.setState({ amountValidation: 'error' });
@@ -94,7 +115,7 @@ export default class CollectionForm extends Component {
 
             let collectionData = {
                 customerid: this.state.customerById._id,
-                voucherno: this.state.voucher,
+                voucherno: this.state.voucherData.voucherno,
                 selectedDate: this.state.selectedDate,
                 createDate: this.state.createDate,
                 amount: this.state.amount
@@ -109,7 +130,7 @@ export default class CollectionForm extends Component {
                 }
 
                 Service().update_customer(updateCustomerAmt).then(res => {
-                    this.setState({ voucher: '', selectedDate: moment(), amount: '', selectedOptions: '', customerById: '' });
+                    this.setState({ voucher: '', selectedDate: moment(), amount: '', selectedOptions: '', customerById: '', selectedVoucherOptions: '' });
                 });
                 this.setState({ showAlert: true });
                 this.alertDissmis();
@@ -123,14 +144,14 @@ export default class CollectionForm extends Component {
         this.setState({
             customerById: '',
             selectedOptions: '',
-            voucher: '',
+            selectedVoucherOptions: '',
             selectedDate: moment(),
             amount: '',
             customerid: '',
             customerValidation: null,
-            voucherValidation: null,
             amountValidation: null,
-            selectValidation: null
+            selectValidation: null,
+            selectVoucherValidation: null
         });
 
     }
@@ -143,12 +164,12 @@ export default class CollectionForm extends Component {
                         <Row>
                             <Col sm={12} md={6} lg={6}>
                                 <h2 className="collecth2">Sales Amount: {this.state.customerById.salesamount === undefined ?
-                                    <span className="empty-span"><br/>Please select a customer to see amount</span> :
+                                    <span className="empty-span"><br />Please select a customer to see amount</span> :
                                     this.state.customerById.salesamount + 'K'}</h2>
                             </Col>
                             <Col sm={12} md={6} lg={6}>
                                 <h2 className="collecth2">Current Amount: {this.state.customerById.currentamount === undefined ?
-                                    <span className="empty-span"><br/>Please select a customer to see amount</span> :
+                                    <span className="empty-span"><br />Please select a customer to see amount</span> :
                                     this.state.customerById.currentamount + 'K'}</h2>
                             </Col>
                         </Row>
@@ -156,8 +177,15 @@ export default class CollectionForm extends Component {
                             <Col sm={12} md={6} lg={6}>
                                 <FormGroup validationState={this.state.selectValidation}>
                                     <ControlLabel>Customers</ControlLabel>
-                                    <Select selectedOptions={this.state.selectedOptions} selectedHandleChange={this.selectedHandleChange} />
-                                    <FormControl.Feedback />
+                                    <InputGroup>
+                                        <InputGroup.Addon><i className="fa fa-user fa" aria-hidden="true"></i></InputGroup.Addon>
+                                        <Select selectedOptions={this.state.selectedOptions}
+                                            placeHolder="Select a customer"
+                                            selectedHandleChange={this.selectedHandleChange}
+                                            selectTo="customers" />
+                                        <FormControl.Feedback />
+                                    </InputGroup>
+
                                 </FormGroup>
                             </Col>
                             <Col sm={12} md={6} lg={6} >
@@ -170,29 +198,33 @@ export default class CollectionForm extends Component {
                         </Row>
                         <Row>
                             <Col sm={12} md={6} lg={6}>
-                                <FormGroup validationState={this.state.voucherValidation}>
+                                <FormGroup validationState={this.state.selectVoucherValidation}>
                                     <ControlLabel>Voucher No.</ControlLabel>
-                                    <FormControl
-                                        type="text"
-                                        name="voucher"
-                                        value={this.state.voucher}
-                                        onChange={this.handlerChange}
-                                        placeholder="Voucher No.">
-                                    </FormControl>
-                                    <FormControl.Feedback />
+                                    <InputGroup>
+                                        <InputGroup.Addon><i className="fa fa-hashtag fa" aria-hidden="true"></i></InputGroup.Addon>
+                                        <Select selectedOptions={this.state.selectedVoucherOptions}
+                                            selectedHandleChange={this.selectedVoucherNoHandleChange}
+                                            placeHolder="Select a voucher"
+                                            selectTo="voucherno" voudata={this.state.voucherData} />
+
+                                        <FormControl.Feedback />
+                                    </InputGroup>
                                 </FormGroup>
                             </Col>
                             <Col sm={12} md={6} lg={6}>
                                 <FormGroup validationState={this.state.amountValidation}>
                                     <ControlLabel>Collection Amount</ControlLabel>
-                                    <FormControl
-                                        type="text"
-                                        name="amount"
-                                        value={this.state.amount}
-                                        onChange={this.handlerChange}
-                                        placeholder="Amount">
-                                    </FormControl>
-                                    <FormControl.Feedback />
+                                    <InputGroup>
+                                        <InputGroup.Addon><i className="fa fa-money fa" aria-hidden="true"></i></InputGroup.Addon>
+                                        <FormControl
+                                            type="text"
+                                            name="amount"
+                                            value={this.state.amount}
+                                            onChange={this.handlerChange}
+                                            placeholder="Amount">
+                                        </FormControl>
+                                        <FormControl.Feedback />
+                                    </InputGroup>
                                 </FormGroup>
                             </Col>
                         </Row>
