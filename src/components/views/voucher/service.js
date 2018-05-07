@@ -58,5 +58,19 @@ export default Service =>({
             return null;
         }
 
-    }
+    },
+    getVocById(v) {
+        try {
+            let customer = { customerid: v }
+            
+            return axios.post('/api/dailycollection/getvouchers', customer)
+                .then(res => {                    
+                    return res.data;
+                })
+        }
+        catch (err) {
+            console.log(err);
+            return null;
+        }
+    },
 })

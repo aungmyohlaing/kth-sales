@@ -52,8 +52,7 @@ export default class SelectComponet extends React.Component {
 
     
     componentDidUpdate(prevprops) {
-        var self = this;       
-         
+        var self = this;               
         if (prevprops.voudata !== self.props.voudata) {
             console.log('This Props', self.props.voudata);
             var vocdata = self.props.voudata;

@@ -28,6 +28,10 @@ export default class frmVoucher extends Component {
             priceValidation: null,
             showAlert: false,
             createdate: moment(),
+            voucherData: [{
+                customerid: '',
+                voucherno: ''
+            }],
 
         }
 
@@ -109,7 +113,26 @@ export default class frmVoucher extends Component {
             //console.log('Selected Value Null');
             this.setState({ selectedOptions: '' });
         }
+        else {
+
+            Service().getVocById(selectedOptions.value).then(res => {
+
+                this.setState({ voucherData: res });
+
+                console.log('Vouchers Data', this.state.voucherData);
+            })
+        }
         //console.log(`Selected: ${selectedOptions.value}`);
+    }
+
+    selectedVoucherNoHandleChange = (voucherno) => {
+
+        this.setState({ voucherno, selectVoucherValidation: null });
+        if (voucherno === null || voucherno === undefined) {
+            //console.log('Selected Value Null');
+            this.setState({ voucherno: '' });
+        }
+        //console.log(`Selected:`, this.state.selectedOptions.value);
     }
 
     /**
@@ -144,10 +167,10 @@ export default class frmVoucher extends Component {
         }
         else {
 
-            
 
-            if (this.props.formtype === 'newvoucher') {     
-                
+
+            if (this.props.formtype === 'newvoucher') {
+
                 let newVoucherCollection = {
                     customerid: this.state.selectedOptions.value,
                     voucherdate: this.state.voucherdate,
@@ -171,15 +194,17 @@ export default class frmVoucher extends Component {
                         this.onCancelClick();
                         this.setState({ showAlert: true });
                         this.alertDissmis();
-                    })                   
-                   
-                })                
+                    })
+
+                })
             } else {
+
+               
 
                 let returnItemCollection = {
                     customerid: this.state.selectedOptions.value,
                     returndate: this.state.voucherdate,
-                    voucherno: this.state.voucherno,
+                    voucherno: this.state.voucherno.value,
                     itemno: this.state.itemno,
                     itemname: this.state.itemname,
                     quantity: this.state.quantity,
@@ -199,9 +224,9 @@ export default class frmVoucher extends Component {
                         this.onCancelClick();
                         this.setState({ showAlert: true });
                         this.alertDissmis();
-                    })                   
-                   
-                })        
+                    })
+
+                })
             }
 
         }
@@ -232,6 +257,8 @@ export default class frmVoucher extends Component {
     }
 
     render() {
+        var self = this;
+        const { formtype } = this.props;
         /**
          * Show pop up messages on price and quantity 
          */
@@ -239,16 +266,20 @@ export default class frmVoucher extends Component {
             <Popover id="popover-positioned-scrolling-left" title="">
                 Please enter numbers only.
             </Popover>
-        );
+        );        
 
         return (
+
             <div>
                 <Form>
                     <Row>
                         <Col sm={12} md={6} lg={6}>
                             <FormGroup validationState={this.state.selectValidation}>
                                 <ControlLabel>Customers</ControlLabel>
-                                <Select selectedOptions={this.state.selectedOptions} selectedHandleChange={this.selectedHandleChange} />
+                                <Select selectedOptions={this.state.selectedOptions}
+                                    selectedHandleChange={this.selectedHandleChange}
+                                    placeHolder="Select a customer"
+                                    selectTo="customers" />
                                 <FormControl.Feedback />
                             </FormGroup>
                         </Col>
@@ -266,13 +297,25 @@ export default class frmVoucher extends Component {
                         <Col sm={12} md={6} lg={6}>
                             <FormGroup validationState={this.state.vouchernoValidation}>
                                 <ControlLabel>Voucher No.</ControlLabel>
-                                <FormControl
-                                    name="voucherno"
-                                    type="text"
-                                    value={this.state.voucherno}
-                                    onChange={this.onhandlerChange}
-                                    placeholder="Voucher No."
-                                />
+                               
+                                {
+                                    (formtype === 'newvoucher') ?
+                                    <FormControl
+                                        name="voucherno"
+                                        type="text"
+                                        value={self.state.voucherno}
+                                        onChange={self.onhandlerChange}
+                                        placeholder="Voucher No."
+                                    />
+                                :
+                                   <Select
+                                    selectedOptions={self.state.voucherno}
+                                    selectedHandleChange={self.selectedVoucherNoHandleChange}
+                                    placeHolder="Select a voucher"
+                                    selectTo="voucherno"
+                                    voudata={self.state.voucherData} />
+
+                                }
                                 <FormControl.Feedback />
                             </FormGroup>
                         </Col>
