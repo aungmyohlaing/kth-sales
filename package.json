@@ -30,7 +30,7 @@
     "react-scripts": "1.1.0",
     "react-select": "^1.2.1"
   },
-  "scripts": {    
+  "scripts": {        
     "start": "nodemon server.js",
     "dev-start": "react-scripts start",
     "build": "react-scripts build",
