@@ -117,7 +117,7 @@ export default class ForgetPassword extends Component {
                 <Navbar inverse collapseOnSelect fluid>
                     <Navbar.Header>
                         <Navbar.Brand>
-                        <Link to="/reset">KTH</Link>
+                        <Link to="/login">KTH</Link>
                         </Navbar.Brand>
                         <Navbar.Toggle />
                     </Navbar.Header>
@@ -128,7 +128,7 @@ export default class ForgetPassword extends Component {
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
-                <div className="container" style={{ 'margin-top': '35px' }}>
+                <div className="container" style={{ 'margin-top': '35px', 'marginBottom': '82px' }}>
                     <div>
                         <Row>
                             <Col xs={12} md={4} lg={4} lgOffset={4}>
@@ -163,7 +163,7 @@ export default class ForgetPassword extends Component {
                                                         type="password"
                                                         value={this.state.password}
                                                         onChange={this.handlerChange}
-                                                        placeholder="Password"
+                                                        placeholder="New Password"
                                                     />
                                                     <FormControl.Feedback />
                                                 </InputGroup>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Nav, Navbar, NavDropdown, MenuItem, Image } from 'react-bootstrap';
+import { Nav, Navbar, NavDropdown, MenuItem, Image, Row, Col } from 'react-bootstrap';
 import RouterLink from '../components/commons/linkContainer';
 import Storage from '../components/commons/localStogare';
 import { Link } from 'react-router-dom';
@@ -10,14 +10,24 @@ export default class Home extends Component {
 
     constructor(props) {
         super(props);
-
+        this.state = {
+            userinfo:{
+                fullname:'',
+                email: '',
+                usertype:''
+            }
+        }
         this.onLogout = this.onLogout.bind(this);
     }
 
     onLogout() {
         Storage(localStorage).remove('loggedIn');
-        Storage(localStorage).remove('username');
-        //window.location.href = '/login';
+        Storage(localStorage).remove('username');       
+    }
+
+    componentDidMount(){
+        var userinfo = Storage(localStorage).get('userinfo');
+        this.setState({userinfo:userinfo});
     }
 
     render() {
@@ -46,6 +56,18 @@ export default class Home extends Component {
 
                         <Nav pullRight >
                             <NavDropdown eventKey={3} title={<div><Image src={usericon} responsive /></div>} id="user-nav-dropdown">
+                                <MenuItem className="text-center user-menuitem-card" > 
+                                    <Row style={{'marginBottom':'10px'}}>
+                                        <Col  className="user-info-menuitem"><Image src={usericon} responsive /></Col>
+                                    </Row>
+                                    <Row>
+                                        <Col >{this.state.userinfo.fullname}</Col>
+                                    </Row>
+                                    <Row>
+                                        <Col >{this.state.userinfo.email}</Col>
+                                    </Row>
+                                </MenuItem>
+                                <MenuItem divider />
                                 <RouterLink to='/customer/list' role="menuitem" ><i className="fa fa-gear fa-fw"></i> Settings</RouterLink>
                                 <MenuItem divider />
                                 <RouterLink to='/login' onclick={this.onLogout}><i className="fa fa-sign-out fa-fw"></i> Logout</RouterLink>

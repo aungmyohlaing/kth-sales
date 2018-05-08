@@ -20,7 +20,7 @@ export default class login extends Component {
             error: false,
             userValidationState: null,
             pwdValidationState: null,
-            alertVisible: false
+            alertVisible: false            
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -66,7 +66,13 @@ export default class login extends Component {
                 .then(res => {                    
                     if (res.data !== null) {
                         Storage(localStorage).set('loggedIn', true);
-                        Storage(localStorage).set('username', this.state.username);
+                        
+                        var usersData = {
+                            fullname: res.data.fullname,
+                            email: res.data.email,
+                            usertype: res.data.userType
+                        }
+                        Storage(localStorage).set('userinfo', usersData);                                          
                         history.push('/home');
                     }
                     else {
@@ -113,7 +119,7 @@ export default class login extends Component {
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
-                <div className="container" style={{ 'marginTop': '35px' }}  >
+                <div className="container" style={{ 'marginTop': '35px','marginBottom':'60px' }}  >
                     <div>
                         <Row >
                             <Col xs={12} md={4} lg={4} lgOffset={4} className="text-center">
@@ -127,7 +133,8 @@ export default class login extends Component {
                                         pwdValidationState={this.state.pwdValidationState}
                                         handlerAlertDismiss={this.handlerAlertDismiss}
                                         handlerKeyPress={this.handlerKeyPress}
-                                        alertVisible={this.state.alertVisible} />
+                                        alertVisible={this.state.alertVisible}
+                                        users={this.state.users} />
                                 </Well>
                             </Col>
                         </Row>

@@ -116,10 +116,7 @@ export default class register extends Component {
                 .catch(err => {
                     console.log(err);
                 })
-
-
         }
-
     }
 
     render() {
@@ -128,7 +125,7 @@ export default class register extends Component {
                 <Navbar inverse collapseOnSelect fluid>
                     <Navbar.Header>
                         <Navbar.Brand>
-                            <Link to="/register">KTH</Link>
+                            <Link to="/login">KTH</Link>
                         </Navbar.Brand>
                         <Navbar.Toggle />
                     </Navbar.Header>
@@ -139,7 +136,7 @@ export default class register extends Component {
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
-                <div className="container" style={{ 'marginTop': '35px' }}>
+                <div className="container" style={{ 'marginTop': '35px', 'marginBottom': '30px' }}>
                     <div>
                         <Row>
                             <Col xs={12} md={4} lg={4} lgOffset={4}>

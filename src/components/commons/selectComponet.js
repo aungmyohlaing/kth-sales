@@ -45,7 +45,7 @@ export default class SelectComponet extends React.Component {
                 onChange={selectedHandleChange}
                 options={this.state.options}
                 clearable={false}
-                placeholder={placeHolder}
+                placeholder={placeHolder}                
             />
         )
     }

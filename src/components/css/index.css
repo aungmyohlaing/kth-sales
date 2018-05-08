@@ -30,6 +30,18 @@ a:hover{
   display:none;
 }
 
+.user-menuitem-card{
+  text-decoration:none;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.user-info-menuitem{
+  display: table;
+  margin-left: auto;
+  margin-right: auto;     
+}
+
 .thankyoubox{
   margin-top:100px;
 }
