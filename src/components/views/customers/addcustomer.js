@@ -117,7 +117,7 @@ export default class Customer extends Component {
                                 <Col xs={12} md={10} lg={10}>
                                     <Grid fluid={true}>
                                         <Row>
-                                            <Col xs={12} md={5} lg={5}>
+                                            <Col xs={12} md={6} lg={6}>
                                                 <FormGroup validationState={this.state.nameValidation}>
                                                     <ControlLabel>Customer Name</ControlLabel>
                                                     <FormControl 
@@ -130,7 +130,7 @@ export default class Customer extends Component {
                                                     <FormControl.Feedback />
                                                 </FormGroup>
                                             </Col>
-                                            <Col xs={12} md={5} lg={5}>
+                                            <Col xs={12} md={6} lg={6}>
                                                 <FormGroup>
                                                     <ControlLabel>Customer Email</ControlLabel>
                                                     <FormControl name="email" type="text" 
@@ -143,7 +143,7 @@ export default class Customer extends Component {
                                             </Col>
                                         </Row>
                                         <Row>
-                                            <Col xs={12} md={5} lg={5}>
+                                            <Col xs={12} md={6} lg={6}>
                                                 <FormGroup validationState={this.state.mobileValidation}>
                                                     <ControlLabel>Customer Mobile</ControlLabel>
                                                     <FormControl name="mobile" 
@@ -155,7 +155,7 @@ export default class Customer extends Component {
                                                     <FormControl.Feedback />
                                                 </FormGroup>
                                             </Col>
-                                            <Col xs={12} md={5} lg={5}>
+                                            <Col xs={12} md={6} lg={6}>
                                                 <FormGroup>
                                                     <ControlLabel>Customer phone</ControlLabel>
                                                     <FormControl name="phone" 
@@ -169,7 +169,7 @@ export default class Customer extends Component {
                                             </Col>
                                         </Row>
                                         <Row>
-                                            <Col xs={12} md={10} lg={10}>
+                                            <Col xs={12} md={12} lg={12}>
                                                 <FormGroup validationState={this.state.address1Validation}>
                                                     <ControlLabel>Customer Address-1</ControlLabel>
                                                     <FormControl name="address1" 
@@ -183,7 +183,7 @@ export default class Customer extends Component {
                                             </Col>                                            
                                         </Row>
                                         <Row>
-                                            <Col xs={12} md={10} lg={10}>
+                                            <Col xs={12} md={12} lg={12}>
                                                 <FormGroup>
                                                     <ControlLabel>Customer Address-2</ControlLabel>
                                                     <FormControl name="address2" componentClass="textarea" 
@@ -196,7 +196,7 @@ export default class Customer extends Component {
                                             </Col>                                            
                                         </Row>                                        
                                         <Row>
-                                            <Col xs={12} md={10} lg={10}>
+                                            <Col xs={12} md={12} lg={12}>
                                                 <SaveAlert 
                                                 showAlert={this.state.showAlert} 
                                                 onDismiss={this.onAlertDissmis} 
@@ -205,10 +205,10 @@ export default class Customer extends Component {
                                             </Col>
                                         </Row>
                                         <Row>
-                                            <Col xs={12} md={10} lg={10} >
+                                            <Col xs={12} md={12} lg={12} >
                                                 <ButtonToolbar className="pull-right" >
-                                                    <Button bsStyle="primary" onClick={this.onSaveClick} >Save</Button>
-                                                    <Button bsStyle="danger" onClick={this.onCancelClick} >Cancel</Button>
+                                                    <Button bsStyle="primary" bsSize="large" onClick={this.onSaveClick} >Save</Button>
+                                                    <Button bsStyle="danger" bsSize="large" onClick={this.onCancelClick} >Cancel</Button>
                                                 </ButtonToolbar>
                                             </Col>                                            
                                         </Row>

@@ -15,12 +15,12 @@ var env = require('dotenv').load();
  * Moogo DB Connection
  */
 //Local MongoDB Connection
-//mongoose.connect('mongodb://192.168.1.50/kth');
+mongoose.connect('mongodb://192.168.1.50/kth');
 // mongoose.connect('mongodb://kth:WlPFZhgaiMSEuFoYXGHb73GbDX04vndb1GPwhBfeKxqC1swLqcDUWgdvpoeP7JKnBgXsEgD9QnkWLwFbvCVekw%3D%3D@kth.documents.azure.com:10255/?ssl=true&replicaSet=globaldb');
 // MS Azure Cosmosdb Connection
 // mongoose.connect(process.env.COSMOSDB_CONSTR+process.env.COSMOSDB_DBNAME+"?ssl=true&replicaSet=globaldb");
 // MongoDB Atlas Connection
-mongoose.connect(process.env.ATLAS_CONSTR);
+// mongoose.connect(process.env.ATLAS_CONSTR);
 var db = mongoose.connection;
 //bind error info
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -430,14 +430,20 @@ router.route('/home/mostreturn')
  * User Api Routes
  */
 router.route('/users')
-    .get(function (req, res) {
-        user.find({}, function (err, users) {
-            if (err)
-                res.send(err);
+    .get(function (req, res) {               
+        user.aggregate([{
+            "$project": {
+                "fullname": "$fullname",
+                "username": "$username",
+                "email": "$email",
+                "userType": "$userType"
+            }
+        }], function (err, data) {
+            if (err) res.send(err);
 
-            res.json(users);
-
-        });
+            res.json(data);
+        }
+        )
 
     })
     .post(function (req, res) {
@@ -456,7 +462,25 @@ router.route('/users')
                 res.send(err);
             res.json({ message: 'Successfully added!' });
         });
+    })
+    .delete(function (req, res){        
+        user.deleteOne({ _id: req.body.userid}, function(err, data){
+            if(err) res.send(err)
+          
+            res.json({ message: 'Successfully delete!' });
+        })
     });
+
+    router.route('/users/noteq')
+    .post(function(req, res){        
+        user.find({ _id: {$ne: req.body.id}}, function (err, users) {
+            if (err)
+                res.send(err);
+
+            res.json(users);
+
+        });
+    })
 
 /**
  * Update Password
@@ -508,6 +532,15 @@ router.route('/customer')
             res.json({ message: 'Successfully added!' });
         })
     });
+
+router.route('/customer/return')
+    .get(function (req, res) {
+        customer.find({ currentamount: { $gt: 0 } }, function (err, customers) {
+            if (err) res.send(err);
+
+            res.json(customers);
+        })
+    })
 
 /*
  * Customer Detail Router
@@ -594,11 +627,11 @@ router.route('/dailycollection/update/customer')
     });
 
 router.route('/dailycollection/getvouchers')
-    .post(function (req, res) {        
+    .post(function (req, res) {
         newvoucher.aggregate([
             {
-                "$project": {             
-                    "customerid": "$customerid",       
+                "$project": {
+                    "customerid": "$customerid",
                     "voucherno": "$voucherno"
                 }
             },
@@ -694,8 +727,6 @@ router.route('/returnitems/update/customer')
             });
         })
     });
-
-
 
 
 app.use('/api', router);

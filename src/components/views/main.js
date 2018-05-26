@@ -12,6 +12,7 @@ import Collection from './daily/collection';
 import NewVoucher from './voucher/newVoucher';
 import ResetPassword from './forget_password/forget';
 import ReturnItems from './voucher/returnitems';
+import Users from './users/userlist';
 
 const Main = () => (
     <main>
@@ -30,6 +31,7 @@ const Main = () => (
                 <Route exact path="/newvoucher" component={NewVoucher}/>
                 <Route exact path="/reset" component={ResetPassword}/>
                 <Route exact path="/returnitems" component={ReturnItems}/>
+                <Route exact path="/users" component={Users}/>
             </Switch>
         </Router>
     </main>

@@ -27,6 +27,18 @@ export default service => ({
             return null;
         }
     },
+    getReturnCustomer() {
+        try {
+            return axios.get('/api/customer/return')
+                .then(res => {
+                    return res.data;
+                })
+        }
+        catch (e) {
+            return null;
+        }
+
+    },
     getDailyCollection(v){
         try {
             let customer = {customerid: v}

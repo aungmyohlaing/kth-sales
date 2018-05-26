@@ -68,6 +68,7 @@ export default class login extends Component {
                         Storage(localStorage).set('loggedIn', true);
                         
                         var usersData = {
+                            userid: res.data._id,
                             fullname: res.data.fullname,
                             email: res.data.email,
                             usertype: res.data.userType
@@ -113,13 +114,12 @@ export default class login extends Component {
                         <Navbar.Toggle />
                     </Navbar.Header>
                     <Navbar.Collapse>
-                        <Nav pullRight>
-                            <RouterLink to='/register'>Register</RouterLink>
+                        <Nav pullRight>                            
                             <RouterLink to='/login'>Login</RouterLink>
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
-                <div className="container" style={{ 'marginTop': '35px','marginBottom':'60px' }}  >
+                <div className="container" style={{ 'marginTop': '35px','marginBottom':'95px' }}  >
                     <div>
                         <Row >
                             <Col xs={12} md={4} lg={4} lgOffset={4} className="text-center">

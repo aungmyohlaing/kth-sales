@@ -32,6 +32,7 @@ export default class frmVoucher extends Component {
                 customerid: '',
                 voucherno: ''
             }],
+            selectTo:''            
 
         }
 
@@ -43,6 +44,12 @@ export default class frmVoucher extends Component {
         this.onhandleDissmis = this.onhandleDissmis.bind(this);
         this.alertDissmis = this.alertDissmis.bind(this);
         this.onCancelClick = this.onCancelClick.bind(this);
+    }
+
+    componentWillMount(){
+        if (this.props.formtype === 'newvoucher') 
+            this.setState({selectTo: 'customers'});
+        else this.setState({selectTo:'return-customers'});
     }
 
     /**
@@ -167,10 +174,8 @@ export default class frmVoucher extends Component {
         }
         else {
 
-
-
             if (this.props.formtype === 'newvoucher') {
-
+                
                 let newVoucherCollection = {
                     customerid: this.state.selectedOptions.value,
                     voucherdate: this.state.voucherdate,
@@ -197,10 +202,8 @@ export default class frmVoucher extends Component {
                     })
 
                 })
-            } else {
-
-               
-
+            } else {               
+                
                 let returnItemCollection = {
                     customerid: this.state.selectedOptions.value,
                     returndate: this.state.voucherdate,
@@ -275,11 +278,11 @@ export default class frmVoucher extends Component {
                     <Row>
                         <Col sm={12} md={6} lg={6}>
                             <FormGroup validationState={this.state.selectValidation}>
-                                <ControlLabel>Customers</ControlLabel>
+                                <ControlLabel>Customers: {this.state.selectTo}</ControlLabel>
                                 <Select selectedOptions={this.state.selectedOptions}
                                     selectedHandleChange={this.selectedHandleChange}
                                     placeHolder="Select a customer"
-                                    selectTo="customers" />
+                                    selectTo={this.state.selectTo} />
                                 <FormControl.Feedback />
                             </FormGroup>
                         </Col>

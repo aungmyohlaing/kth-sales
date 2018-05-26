@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Form, FormGroup, Col, InputGroup, FormControl, Button, Alert } from 'react-bootstrap';
+import { Form, FormGroup, Col, InputGroup, FormControl, Button, Alert, Radio } from 'react-bootstrap';
 
 export default class registerForm extends Component {
 
     render() {
         const { fullname, email, username, password, confirmPwd, userFullNameValidation, onChange, onSubmit, showUserAlert,
-            emailValidation, userNameValidation, pwdValidation, conPwdValidation, showAlert, handlerAlertDismiss } = this.props;
+            emailValidation, userNameValidation, pwdValidation, conPwdValidation, showAlert, handlerAlertDismiss, usertype, radiohandlerChange } = this.props;
 
         function ShowAlert(props) {
             if (!props.show) {
@@ -19,8 +19,8 @@ export default class registerForm extends Component {
             );
         }
 
-        function ShowUserAlreadyExistAlett(props){
-            if(!props.show){
+        function ShowUserAlreadyExistAlett(props) {
+            if (!props.show) {
                 return null;
             }
             return (
@@ -36,8 +36,18 @@ export default class registerForm extends Component {
 
                 <Form horizontal>
                     <FormGroup >
+                        <Col sm={12} className="text-center">
+                            <h2> Add User </h2>
+                        </Col>
+                    </FormGroup>
+                    <FormGroup controlId="formHorizontalUserType" >
                         <Col sm={12}>
-                            <h2> Register </h2>
+                            <Radio name="rdoUserType" value="User" onChange={radiohandlerChange} inline checked={usertype === 'User'}>
+                                User
+                            </Radio>
+                            <Radio name="rdoUserType" value="Admin" onChange={radiohandlerChange} inline checked={usertype === 'Admin'}>
+                                Admin
+                            </Radio>
                         </Col>
                     </FormGroup>
                     <FormGroup controlId="formHorizontalFullName" validationState={userFullNameValidation}>
@@ -119,7 +129,7 @@ export default class registerForm extends Component {
                         <Col sm={12}>
                             <Button bsStyle="primary" block
                                 onClick={onSubmit}>
-                                Register
+                                Submit
                             </Button>
                         </Col>
                     </FormGroup>

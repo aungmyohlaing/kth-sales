@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Col, Nav, Navbar, Row, Well } from 'react-bootstrap';
+import { Col, Row, Well } from 'react-bootstrap';
 import RegisterForm from '../register/form';
-import RouterLink from '../../commons/linkContainer';
 import axios from 'axios';
 import Storage from '../../../components/commons/localStogare';
+import Header from '../../header';
 import Footer from '../../footer';
-import {Link} from 'react-router-dom';
 
 export default class register extends Component {
 
@@ -18,6 +17,7 @@ export default class register extends Component {
             username: '',
             password: '',
             confirmPwd: '',
+            usertype:'User',
             userFullNameValidation: null,
             emailValidation: null,
             userNameValidation: null,
@@ -30,11 +30,16 @@ export default class register extends Component {
         this.onSubmit = this.onSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handlerAlertDismiss = this.handlerAlertDismiss.bind(this);
+        this.radiohandleChange = this.radiohandleChange.bind(this);
     }
 
-    componentDidMount(){
-        var loggedIn = Storage(localStorage).get('loggedIn');        
-        if(loggedIn){
+    componentDidMount() {
+        let loggedIn = Storage(localStorage).get('loggedIn');
+        let userinfo = Storage(localStorage).get('userinfo');
+        if (!loggedIn) {
+            this.props.history.push('/login');
+        }
+        else if (userinfo.usertype.toString().toLowerCase() !== 'admin'){
             this.props.history.push('/home');
         }
     }
@@ -54,6 +59,10 @@ export default class register extends Component {
 
     handlerAlertDismiss() {
         this.setState({ showAlert: false, showUserAlert: false });
+    }
+
+    radiohandleChange(e){
+        this.setState({usertype:e.target.value})
     }
 
     onSubmit(event) {
@@ -86,7 +95,7 @@ export default class register extends Component {
                 email: this.state.email,
                 username: this.state.username,
                 password: this.state.password,
-                userType: 'Admin',
+                userType: this.state.usertype,
                 createDate: Date.now()
             }
 
@@ -97,16 +106,15 @@ export default class register extends Component {
 
 
             axios.post('/api/checkuser', paramusername)
-                .then(res => {                    
+                .then(res => {
                     if (res.data !== null) {
                         this.setState({ showUserAlert: true });
                     }
                     else {
                         axios.post('/api/users', users)
-                            .then(res => {
-                                console.log(res);
+                            .then(res => {                               
                                 this.setState({ fullname: '', email: '', username: '', password: '', confirmPwd: '' });
-                                this.props.history.push('/thankyou');
+                                this.props.history.push('/users');
                             })
                             .catch(err => {
                                 console.error(err);
@@ -122,44 +130,35 @@ export default class register extends Component {
     render() {
         return (
             <div>
-                <Navbar inverse collapseOnSelect fluid>
-                    <Navbar.Header>
-                        <Navbar.Brand>
-                            <Link to="/login">KTH</Link>
-                        </Navbar.Brand>
-                        <Navbar.Toggle />
-                    </Navbar.Header>
-                    <Navbar.Collapse>
-                        <Nav pullRight>
-                            <RouterLink to='/register'>Register</RouterLink>
-                            <RouterLink to='/login'>Login</RouterLink>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Navbar>
-                <div className="container" style={{ 'marginTop': '35px', 'marginBottom': '30px' }}>
-                    <div>
-                        <Row>
-                            <Col xs={12} md={4} lg={4} lgOffset={4}>
-                                <Well>
-                                    <RegisterForm
-                                        fullname={this.state.fullname}
-                                        email={this.state.email}
-                                        username={this.state.username}
-                                        password={this.state.password}
-                                        confirmPwd={this.state.confirmPwd}
-                                        userFullNameValidation={this.state.userFullNameValidation}
-                                        emailValidation={this.state.emailValidation}
-                                        userNameValidation={this.state.userNameValidation}
-                                        pwdValidation={this.state.pwdValidation}
-                                        conPwdValidation={this.state.conPwdValidation}
-                                        onChange={this.handleChange}
-                                        onSubmit={this.onSubmit}
-                                        showAlert={this.state.showAlert}
-                                        showUserAlert={this.state.showUserAlert}
-                                        handlerAlertDismiss={this.handlerAlertDismiss} />
-                                </Well>
-                            </Col>
-                        </Row>
+                <Header />
+                <div className="container">
+                    <div className="container" style={{ 'marginTop': '100px', 'marginBottom':'25px'}}>
+                        <div>
+                            <Row>
+                                <Col xs={12} md={4} lg={4} lgOffset={4}>
+                                    <Well>
+                                        <RegisterForm
+                                            fullname={this.state.fullname}
+                                            email={this.state.email}
+                                            username={this.state.username}
+                                            password={this.state.password}
+                                            confirmPwd={this.state.confirmPwd}
+                                            userFullNameValidation={this.state.userFullNameValidation}
+                                            emailValidation={this.state.emailValidation}
+                                            userNameValidation={this.state.userNameValidation}
+                                            pwdValidation={this.state.pwdValidation}
+                                            conPwdValidation={this.state.conPwdValidation}
+                                            onChange={this.handleChange}
+                                            onSubmit={this.onSubmit}
+                                            showAlert={this.state.showAlert}
+                                            showUserAlert={this.state.showUserAlert}
+                                            handlerAlertDismiss={this.handlerAlertDismiss} 
+                                            usertype = {this.state.usertype}
+                                            radiohandlerChange = {this.radiohandleChange}/>
+                                    </Well>
+                                </Col>
+                            </Row>
+                        </div>
                     </div>
                 </div>
                 <Footer />

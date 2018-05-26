@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, PageHeader } from 'react-bootstrap';
 import Header from '../../header';
 import Footer from '../../footer';
 import Storage from '../../../components/commons/localStogare';
@@ -32,11 +32,11 @@ export default class Home extends Component {
             currentMonthTotalSales: '',
             lastMonthTotalSales: '',
             currentYearTotalSales: '',
-            lastYearTotalSales: '',            
+            lastYearTotalSales: '',
             currentMonthTotalReturn: '',
             lastMonthTotalReturn: '',
             currentYearTotalReturn: '',
-            lastYearTotalReturn: '',           
+            lastYearTotalReturn: '',
         }
     }
 
@@ -64,8 +64,10 @@ export default class Home extends Component {
                 <Header />
                 <div id="mainview" >
                     <div className="container">
-                        <h2>Sales Board</h2>
-                        <hr />
+                        <PageHeader>
+                            Sales Board
+                    </PageHeader>
+
                         <Row>
                             <Col sm={12} md={3} lg={3}>
                                 <AverageByPeriod title="Average Purchase By Month" description="Compare to last month" averageby="month" />
@@ -77,8 +79,9 @@ export default class Home extends Component {
                             </Col>
                         </Row>
                         <hr />
-                        <h2>Return Board</h2>
-                        <hr />
+                        <PageHeader>
+                            Return Board
+                        </PageHeader>
                         <Row>
                             <Col sm={12} md={3} lg={3}>
                                 <AverageReturnByPeriod title="Average Return By Month" description="Compare to last month" averageby="month" />

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import usericon from '../components/images/man.png';
 
 
-export default class Home extends Component {
+export default class Header extends Component {
 
     constructor(props) {
         super(props);
@@ -52,6 +52,7 @@ export default class Home extends Component {
                             <RouterLink to='/collection'>Collection</RouterLink>
                             <RouterLink to='/newvoucher'>Sales</RouterLink>
                             <RouterLink to='/returnitems'>Returns</RouterLink>
+                            {this.state.userinfo.usertype === "Admin" ? <RouterLink to='/users'>Users</RouterLink> : "" }
                         </Nav>
 
                         <Nav pullRight >

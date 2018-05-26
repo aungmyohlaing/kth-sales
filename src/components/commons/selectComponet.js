@@ -28,9 +28,18 @@ export default class SelectComponet extends React.Component {
                 self.setState({ options: options });
             });
         }
+        else if (self.props.selectTo.toString().toLowerCase() === 'return-customers') {
+            Service().getReturnCustomer().then(res => {
+                let options = [];
+                
+                for (var i = 0; i <= res.length - 1; i++) {
+                    options.push({ value: res[i]._id, label: res[i].name });
+                }
+                self.setState({ options: options });
+            });
+        }
         
     }
-
 
     render() {
         const { selectedOptions, selectedHandleChange, placeHolder } = this.props;
@@ -49,7 +58,6 @@ export default class SelectComponet extends React.Component {
             />
         )
     }
-
     
     componentDidUpdate(prevprops) {
         var self = this;               

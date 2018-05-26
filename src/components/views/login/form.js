@@ -68,11 +68,11 @@ export default class loginForm extends Component {
                     </FormGroup>
 
                     <ShowAlert show={alertVisible} />
-                    <FormGroup>
+                    {/* <FormGroup>
                         <Col sm={12}>
                             Don't have an account? <Link to="/register">Create Here</Link> 
                         </Col>
-                    </FormGroup>
+                    </FormGroup> */}
                     <FormGroup>
                         <Col sm={12}>
                             <Link to="/reset">Forget Your Password?</Link> 

@@ -20,23 +20,27 @@
     "moment": "^2.21.0",
     "mongoose": "^5.0.7",
     "nodemon": "^1.15.1",
+    "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-bootstrap": "^0.32.1",
     "react-chartjs-2": "^2.7.0",
     "react-datepicker": "^1.2.2",
     "react-dom": "^16.2.0",
+    "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.0",
-    "react-select": "^1.2.1"
+    "react-select": "^1.2.1",
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.2.0"
   },
-  "scripts": {        
+  "scripts": {
     "start": "nodemon server.js",
     "dev-start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "dev": "nf start -p 3100",    
+    "dev": "nf start -p 3100",
     "unit-test": "jasmine"
   }
 }

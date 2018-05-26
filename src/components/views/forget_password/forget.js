@@ -122,8 +122,7 @@ export default class ForgetPassword extends Component {
                         <Navbar.Toggle />
                     </Navbar.Header>
                     <Navbar.Collapse>
-                        <Nav pullRight>
-                            <RouterLink to='/register'>Register</RouterLink>
+                        <Nav pullRight>                            
                             <RouterLink to='/login'>Login</RouterLink>
                         </Nav>
                     </Navbar.Collapse>
