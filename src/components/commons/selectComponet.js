@@ -8,12 +8,7 @@ export default class SelectComponet extends React.Component {
             value: '',
             label: ''
         }]
-    }
-
-    // handleChange = (selectedOption) => {
-    //     this.setState({ selectedOption });
-    //     //console.log(`Selected: ${selectedOption.value}`);
-    // }
+    }    
 
     componentWillMount() {
         var self = this;
@@ -30,8 +25,7 @@ export default class SelectComponet extends React.Component {
         }
         else if (self.props.selectTo.toString().toLowerCase() === 'return-customers') {
             Service().getReturnCustomer().then(res => {
-                let options = [];
-                
+                let options = [];                
                 for (var i = 0; i <= res.length - 1; i++) {
                     options.push({ value: res[i]._id, label: res[i].name });
                 }
@@ -60,17 +54,29 @@ export default class SelectComponet extends React.Component {
     }
     
     componentDidUpdate(prevprops) {
-        var self = this;               
-        if (prevprops.voudata !== self.props.voudata) {
-            console.log('This Props', self.props.voudata);
-            var vocdata = self.props.voudata;
-            let options = [];
-
-            for (var i = 0; i <= vocdata.length - 1; i++) {
-                options.push({ value: vocdata[i].voucherno, label: vocdata[i].voucherno });
+        var self = this;         
+        if ( self.props.selectTo === 'voucherno'){
+            if (prevprops.voudata !== self.props.voudata) {                
+                var vocdata = self.props.voudata;
+                let options = [];
+    
+                for (var i = 0; i <= vocdata.length - 1; i++) {
+                    options.push({ value: vocdata[i]._id, label: vocdata[i]._id });
+                }
+                self.setState({ options: options });
             }
-            self.setState({ options: options });
+        } else if (self.props.selectTo === 'itemno'){
+            if (prevprops.itemdata !== self.props.itemdata) {                
+                var itemdata = self.props.itemdata;
+                let options = [];
+    
+                for (var j = 0; j <= itemdata.length - 1; j++) {
+                    options.push({ value: itemdata[j].itemno, label: itemdata[j].itemno });
+                }
+                self.setState({ options: options });
+            }
         }
+        
 
     }
 }

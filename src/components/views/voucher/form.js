@@ -16,6 +16,7 @@ export default class frmVoucher extends Component {
             voucherno: '',
             itemno: '',
             itemname: '',
+            currentqty: '',
             quantity: '',
             price: '',
             amount: '',
@@ -27,12 +28,18 @@ export default class frmVoucher extends Component {
             quantityValidation: null,
             priceValidation: null,
             showAlert: false,
+            alertStyle: '',
+            alertMsg: '',
             createdate: moment(),
             voucherData: [{
                 customerid: '',
                 voucherno: ''
             }],
-            selectTo:''            
+            itemsData: [{
+                voucherno: '',
+                itemno: ''
+            }],
+            selectTo: ''
 
         }
 
@@ -44,12 +51,13 @@ export default class frmVoucher extends Component {
         this.onhandleDissmis = this.onhandleDissmis.bind(this);
         this.alertDissmis = this.alertDissmis.bind(this);
         this.onCancelClick = this.onCancelClick.bind(this);
+        this.selectedItemsHandleChange = this.selectedItemsHandleChange.bind(this);
     }
 
-    componentWillMount(){
-        if (this.props.formtype === 'newvoucher') 
-            this.setState({selectTo: 'customers'});
-        else this.setState({selectTo:'return-customers'});
+    componentWillMount() {
+        if (this.props.formtype === 'newvoucher')
+            this.setState({ selectTo: 'customers' });
+        else this.setState({ selectTo: 'return-customers' });
     }
 
     /**
@@ -70,8 +78,8 @@ export default class frmVoucher extends Component {
             vouchernoValidation: null,
             itemnoValidation: null,
             itemnameValidation: null,
-            quantityValidation: null,
-            priceValidation: null
+            priceValidation: null,
+            quantityValidation: null
         });
     }
     /**
@@ -123,10 +131,8 @@ export default class frmVoucher extends Component {
         else {
 
             Service().getVocById(selectedOptions.value).then(res => {
+                this.setState({ voucherData: res, itemsData: '', itemname: '' });
 
-                this.setState({ voucherData: res });
-
-                console.log('Vouchers Data', this.state.voucherData);
             })
         }
         //console.log(`Selected: ${selectedOptions.value}`);
@@ -134,12 +140,32 @@ export default class frmVoucher extends Component {
 
     selectedVoucherNoHandleChange = (voucherno) => {
 
-        this.setState({ voucherno, selectVoucherValidation: null });
+        this.setState({ voucherno, vouchernoValidation: null });
         if (voucherno === null || voucherno === undefined) {
             //console.log('Selected Value Null');
             this.setState({ voucherno: '' });
+        } else {
+
+            Service().getItemByVoc(this.state.selectedOptions.value, voucherno.value).then(res => {
+
+                this.setState({ itemsData: res, itemname: '', currentqty: '' });
+
+            })
         }
         //console.log(`Selected:`, this.state.selectedOptions.value);
+    }
+
+    selectedItemsHandleChange = (itemno) => {
+        this.setState({ itemno, itemnoValidation: null });
+        if (itemno === null || itemno === undefined) {
+            //console.log('Selected Value Null');
+            this.setState({ itemno: '' });
+        } else {
+            Service().getItemById(this.state.voucherno.value, itemno.value).then(res => {
+
+                this.setState({ itemname: res[0].itemname, currentqty: res[0].quantity, price: res[0].price });
+            })
+        }
     }
 
     /**
@@ -169,67 +195,91 @@ export default class frmVoucher extends Component {
         else if (!this.state.quantity.match(numbers)) {
             this.setState({ quantityValidation: 'error' });
         }
-        else if (!this.state.price.match(numbers)) {
-            this.setState({ priceValidation: 'error' });
-        }
+
         else {
 
             if (this.props.formtype === 'newvoucher') {
-                
-                let newVoucherCollection = {
-                    customerid: this.state.selectedOptions.value,
-                    voucherdate: this.state.voucherdate,
-                    voucherno: this.state.voucherno,
-                    itemno: this.state.itemno,
-                    itemname: this.state.itemname,
-                    quantity: this.state.quantity,
-                    price: this.state.price,
-                    amount: this.state.amount,
-                    createdate: moment()
+
+                if (!this.state.price.match(numbers)) {
+                    this.setState({ priceValidation: 'error' });
                 }
-
-                Service().newvoucher_save(newVoucherCollection).then(res => {
-
-                    let updateCustomer = {
+                else {
+                    let newVoucherCollection = {
                         customerid: this.state.selectedOptions.value,
-                        amount: this.state.amount
+                        voucherdate: this.state.voucherdate,
+                        voucherno: this.state.voucherno,
+                        itemno: this.state.itemno,
+                        itemname: this.state.itemname,
+                        quantity: this.state.quantity,
+                        price: this.state.price,
+                        amount: this.state.amount,
+                        createdate: moment()
                     }
 
-                    Service().newvoucher_update_customer(updateCustomer).then(res => {
-                        this.onCancelClick();
-                        this.setState({ showAlert: true });
-                        this.alertDissmis();
-                    })
+                    Service().newvoucher_save(newVoucherCollection).then(res => {
 
-                })
-            } else {               
-                
-                let returnItemCollection = {
-                    customerid: this.state.selectedOptions.value,
-                    returndate: this.state.voucherdate,
-                    voucherno: this.state.voucherno.value,
-                    itemno: this.state.itemno,
-                    itemname: this.state.itemname,
-                    quantity: this.state.quantity,
-                    price: this.state.price,
-                    amount: this.state.amount,
-                    createdate: moment()
+                        let updateCustomer = {
+                            customerid: this.state.selectedOptions.value,
+                            amount: this.state.amount
+                        }
+
+                        Service().newvoucher_update_customer(updateCustomer).then(res => {
+                            this.onCancelClick();
+                            this.setState({ showAlert: true, alertStyle: 'success', alertMsg: 'Successfully Saved!' });
+                            this.alertDissmis();
+                        })
+
+                    })
                 }
 
-                Service().returnitem_save(returnItemCollection).then(res => {
 
-                    let updateCustomer = {
+            } else {
+                if (this.state.quantity > this.state.currentqty) {
+                    this.setState({ quantityValidation: 'error' });
+                    this.setState({ showAlert: true, alertStyle: 'danger', alertMsg: "Return Quantity Can't Be More Then Current Quantity!" });
+                    this.alertDissmis();
+                }
+                else {
+                    let returnItemCollection = {
                         customerid: this.state.selectedOptions.value,
-                        amount: this.state.amount
-                    }
+                        returndate: this.state.voucherdate,
+                        voucherno: this.state.voucherno.value,
+                        itemno: this.state.itemno.value,
+                        itemname: this.state.itemname,
+                        quantity: this.state.quantity,
+                        price: this.state.price,
+                        amount: this.state.amount,
+                        createdate: moment()
+                    }                    
 
-                    Service().returnitem_update_customer(updateCustomer).then(res => {
-                        this.onCancelClick();
-                        this.setState({ showAlert: true });
-                        this.alertDissmis();
+                    Service().returnitem_save(returnItemCollection).then(res => {
+
+                        console.log('Return Item Save', res);
+                        let updateCustomer = {
+                            customerid: this.state.selectedOptions.value,
+                            amount: this.state.amount
+                        }                        
+
+                        Service().returnitem_update_customer(updateCustomer).then(res => {
+                            let updateVoucher = {
+                                customerid: this.state.selectedOptions.value,
+                                voucherno: this.state.voucherno.value,
+                                itemno: this.state.itemno.value,
+                                quantity: this.state.quantity,
+                                amount: this.state.amount
+                            }                            
+
+                            Service().returnitem_update_voucher(updateVoucher).then(res => {
+                                this.onCancelClick();
+                                this.setState({ showAlert: true, alertStyle: 'success', alertMsg: 'Successfully Saved!' });
+                                this.alertDissmis();
+                            })
+                        });
+
+
                     })
 
-                })
+                }
             }
 
         }
@@ -255,7 +305,10 @@ export default class frmVoucher extends Component {
             itemnameValidation: null,
             quantityValidation: null,
             priceValidation: null,
-            showAlert: false
+            showAlert: false,
+            voucherData: '',
+            itemsData: '',
+            currentqty: ''
         })
     }
 
@@ -269,7 +322,7 @@ export default class frmVoucher extends Component {
             <Popover id="popover-positioned-scrolling-left" title="">
                 Please enter numbers only.
             </Popover>
-        );        
+        );
 
         return (
 
@@ -278,7 +331,7 @@ export default class frmVoucher extends Component {
                     <Row>
                         <Col sm={12} md={6} lg={6}>
                             <FormGroup validationState={this.state.selectValidation}>
-                                <ControlLabel>Customers: {this.state.selectTo}</ControlLabel>
+                                <ControlLabel>Customers</ControlLabel>
                                 <Select selectedOptions={this.state.selectedOptions}
                                     selectedHandleChange={this.selectedHandleChange}
                                     placeHolder="Select a customer"
@@ -300,23 +353,23 @@ export default class frmVoucher extends Component {
                         <Col sm={12} md={6} lg={6}>
                             <FormGroup validationState={this.state.vouchernoValidation}>
                                 <ControlLabel>Voucher No.</ControlLabel>
-                               
+
                                 {
                                     (formtype === 'newvoucher') ?
-                                    <FormControl
-                                        name="voucherno"
-                                        type="text"
-                                        value={self.state.voucherno}
-                                        onChange={self.onhandlerChange}
-                                        placeholder="Voucher No."
-                                    />
-                                :
-                                   <Select
-                                    selectedOptions={self.state.voucherno}
-                                    selectedHandleChange={self.selectedVoucherNoHandleChange}
-                                    placeHolder="Select a voucher"
-                                    selectTo="voucherno"
-                                    voudata={self.state.voucherData} />
+                                        <FormControl
+                                            name="voucherno"
+                                            type="text"
+                                            value={self.state.voucherno}
+                                            onChange={self.onhandlerChange}
+                                            placeholder="Voucher No."
+                                        />
+                                        :
+                                        <Select
+                                            selectedOptions={self.state.voucherno}
+                                            selectedHandleChange={self.selectedVoucherNoHandleChange}
+                                            placeHolder="Select a voucher"
+                                            selectTo="voucherno"
+                                            voudata={self.state.voucherData} />
 
                                 }
                                 <FormControl.Feedback />
@@ -325,13 +378,24 @@ export default class frmVoucher extends Component {
                         <Col sm={12} md={6} lg={6}>
                             <FormGroup validationState={this.state.itemnoValidation}>
                                 <ControlLabel>Item No.</ControlLabel>
-                                <FormControl
-                                    name="itemno"
-                                    type="text"
-                                    value={this.state.itemno}
-                                    onChange={this.onhandlerChange}
-                                    placeholder="Item No."
-                                />
+                                {
+                                    (formtype === 'newvoucher') ?
+                                        <FormControl
+                                            name="itemno"
+                                            type="text"
+                                            value={this.state.itemno}
+                                            onChange={this.onhandlerChange}
+                                            placeholder="Item No."
+                                        />
+                                        :
+                                        <Select
+                                            selectedOptions={self.state.itemno}
+                                            selectedHandleChange={self.selectedItemsHandleChange}
+                                            placeHolder="Select a item"
+                                            selectTo="itemno"
+                                            itemdata={self.state.itemsData} />
+
+                                }
                                 <FormControl.Feedback />
                             </FormGroup>
                         </Col>
@@ -347,28 +411,69 @@ export default class frmVoucher extends Component {
                                     value={this.state.itemname}
                                     onChange={this.onhandlerChange}
                                     placeholder="Item Name"
+                                    readOnly={(formtype === 'returnvoucher') ? true : false}
                                 />
                                 <FormControl.Feedback />
                             </FormGroup>
                         </Col>
-                        <Col sm={12} md={6} lg={6}>
-                            <FormGroup validationState={this.state.quantityValidation}>
-                                <ControlLabel>Quantity</ControlLabel>
-                                <OverlayTrigger trigger="focus" placement="bottom" overlay={popoverFocus}>
-                                    <FormControl
-                                        name="quantity"
-                                        type="text"
-                                        value={this.state.quantity}
-                                        onChange={this.onhandlerChange}
-                                        onBlur={this.handleOnBlur}
-                                        placeholder="Quantity"
-                                    />
 
-                                </OverlayTrigger>
-                                <FormControl.Feedback />
-                            </FormGroup>
+                        {
+                            (formtype !== 'returnvoucher') ?
+                                <Col sm={12} md={6} lg={6}>
+                                    <FormGroup validationState={this.state.quantityValidation}>
 
-                        </Col>
+                                        <ControlLabel>Quantity</ControlLabel>
+                                        <OverlayTrigger trigger="focus" placement="bottom" overlay={popoverFocus}>
+                                            <FormControl
+                                                name="quantity"
+                                                type="text"
+                                                value={this.state.quantity}
+                                                onChange={this.onhandlerChange}
+                                                onBlur={this.handleOnBlur}
+                                                placeholder="Quantity"
+                                                maxLength={5}
+                                            />
+
+                                        </OverlayTrigger>
+                                        <FormControl.Feedback />
+                                    </FormGroup>
+                                </Col>
+                                :
+                                <Row style={{ "margin": "0px" }}>
+                                    <Col sm={12} md={3} lg={3}>
+                                        <FormGroup >
+                                            <ControlLabel>Current Quantity</ControlLabel>
+                                            <FormControl
+                                                name="currentqty"
+                                                type="text"
+                                                value={this.state.currentqty}
+                                                placeholder="Current Quantity"
+                                                readOnly
+                                            />
+                                        </FormGroup>
+                                    </Col>
+                                    <Col sm={12} md={3} lg={3}>
+                                        <FormGroup validationState={this.state.quantityValidation}>
+
+                                            <ControlLabel>Return Quantity</ControlLabel>
+                                            <OverlayTrigger trigger="focus" placement="bottom" overlay={popoverFocus}>
+                                                <FormControl
+                                                    name="quantity"
+                                                    type="text"
+                                                    value={this.state.quantity}
+                                                    onChange={this.onhandlerChange}
+                                                    onBlur={this.handleOnBlur}
+                                                    placeholder="Quantity"
+                                                    maxLength={5}
+                                                />
+
+                                            </OverlayTrigger>
+                                            <FormControl.Feedback />
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                        }
+
                     </Row>
                     <Row>
 
@@ -384,6 +489,7 @@ export default class frmVoucher extends Component {
                                         onKeyDown={this.onHandlerKeyDown}
                                         onBlur={this.handleOnBlur}
                                         placeholder="Price"
+                                        readOnly={(formtype === 'returnvoucher') ? true : false}
                                     />
                                 </OverlayTrigger>
                                 <FormControl.Feedback />
@@ -407,8 +513,8 @@ export default class frmVoucher extends Component {
                         <Col xs={12} md={12} lg={12}>
                             <SaveAlert showAlert={this.state.showAlert}
                                 onDismiss={this.onhandleDissmis}
-                                alertStyle="success"
-                                alertMessage="Successfully Saved!" />
+                                alertStyle={this.state.alertStyle}
+                                alertMessage={this.state.alertMsg} />
                         </Col>
                     </Row>
                     <Row>

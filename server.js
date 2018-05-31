@@ -15,7 +15,7 @@ var env = require('dotenv').load();
  * Moogo DB Connection
  */
 //Local MongoDB Connection
-//mongoose.connect('mongodb://192.168.1.50/kth');
+//mongoose.connect('mongodb://192.168.99.170/kth');
 // mongoose.connect('mongodb://kth:WlPFZhgaiMSEuFoYXGHb73GbDX04vndb1GPwhBfeKxqC1swLqcDUWgdvpoeP7JKnBgXsEgD9QnkWLwFbvCVekw%3D%3D@kth.documents.azure.com:10255/?ssl=true&replicaSet=globaldb');
 // MS Azure Cosmosdb Connection
 // mongoose.connect(process.env.COSMOSDB_CONSTR+process.env.COSMOSDB_DBNAME+"?ssl=true&replicaSet=globaldb");
@@ -430,7 +430,7 @@ router.route('/home/mostreturn')
  * User Api Routes
  */
 router.route('/users')
-    .get(function (req, res) {               
+    .get(function (req, res) {
         user.aggregate([{
             "$project": {
                 "fullname": "$fullname",
@@ -463,17 +463,17 @@ router.route('/users')
             res.json({ message: 'Successfully added!' });
         });
     })
-    .delete(function (req, res){        
-        user.deleteOne({ _id: req.body.userid}, function(err, data){
-            if(err) res.send(err)
-          
+    .delete(function (req, res) {
+        user.deleteOne({ _id: req.body.userid }, function (err, data) {
+            if (err) res.send(err)
+
             res.json({ message: 'Successfully delete!' });
         })
     });
 
-    router.route('/users/noteq')
-    .post(function(req, res){        
-        user.find({ _id: {$ne: req.body.id}}, function (err, users) {
+router.route('/users/noteq')
+    .post(function (req, res) {
+        user.find({ _id: { $ne: req.body.id } }, function (err, users) {
             if (err)
                 res.send(err);
 
@@ -626,25 +626,6 @@ router.route('/dailycollection/update/customer')
         })
     });
 
-router.route('/dailycollection/getvouchers')
-    .post(function (req, res) {
-        newvoucher.aggregate([
-            {
-                "$project": {
-                    "customerid": "$customerid",
-                    "voucherno": "$voucherno"
-                }
-            },
-            {
-                "$match": {
-                    "customerid": req.body.customerid
-                }
-            }
-        ], function (err, data) {
-            if (err) res.send(err);
-            res.json(data);
-        });
-    })
 
 /**
  * New Voucher Router
@@ -726,6 +707,94 @@ router.route('/returnitems/update/customer')
                 res.json({ message: 'Customer has been updated!' })
             });
         })
+    });
+
+router.route('/returnitems/getvouchers')
+    .post(function (req, res) {
+        newvoucher.aggregate([
+            {
+                "$project": {
+                    "customerid": "$customerid",
+                    "voucherno": "$voucherno"
+                }
+            },
+            {
+                "$match": {
+                    "customerid": req.body.customerid
+                }
+            },
+            {
+                "$group": {
+                    _id: "$voucherno"
+                }
+            }
+        ], function (err, data) {
+            if (err) res.send(err);
+            res.json(data);
+        });
+    });
+router.route('/returnitems/update/voucher')
+    .put(function (req, res) {
+        
+        newvoucher.findOne({ customerid: req.body.customerid, voucherno: req.body.voucherno, itemno: req.body.itemno }, function (err, voucher) {
+            if (err) res.send(err);
+
+            
+            voucher.quantity = voucher.quantity - req.body.quantity;
+            voucher.amount = voucher.amount - req.body.amount;
+            
+            voucher.save(function (err) {
+                if (err) res.send(err);
+
+                res.json({ message: 'Voucher has been updated!' })
+            });
+        })
+    });
+
+router.route('/returnitems/getitems')
+    .post(function (req, res) {
+        newvoucher.aggregate([
+            {
+                "$project": {
+                    "customerid": "$customerid",
+                    "voucherno": "$voucherno",
+                    "itemno": "$itemno"
+                }
+            },
+            {
+                "$match": {
+                    "customerid": req.body.customerid,
+                    "voucherno": req.body.voucherno
+                }
+            }
+        ], function (err, data) {
+            if (err) res.send(err);
+            res.json(data);
+        });
+    });
+
+router.route('/returnitems/getitembyid')
+    .post(function (req, res) {
+        newvoucher.aggregate([
+            {
+                "$project": {
+                    "voucherno": "$voucherno",
+                    "itemno": "$itemno",
+                    "itemname": "$itemname",
+                    "quantity": "$quantity",
+                    "price": "$price"
+                }
+            },
+            {
+                "$match": {
+                    "voucherno": req.body.voucherno,
+                    "itemno": req.body.itemno
+                }
+            }
+        ], function (err, data) {
+            if (err) res.send(err);
+            res.json(data);
+        });
     });
 
 

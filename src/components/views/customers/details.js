@@ -187,6 +187,8 @@ export default class Detail extends Component {
                                             <thead>
                                                 <tr>
                                                     <th>Voucher No.</th>
+                                                    <th>Item No.</th>
+                                                    <th>Quantity</th>
                                                     <th>Amount</th>
                                                     <th>Date</th>
                                                 </tr>
@@ -197,6 +199,8 @@ export default class Detail extends Component {
                                                         return (
                                                             <tr key={item._id}>
                                                                 <td>{item.voucherno}</td>
+                                                                <td>{item.itemno}</td>
+                                                                <td>{item.quantity}</td>
                                                                 <td>{item.amount}</td>
                                                                 <td>{Moment(item.voucherdate).format('MMM DD, YYYY')}</td>
                                                             </tr>
@@ -222,6 +226,8 @@ export default class Detail extends Component {
                                             <thead>
                                                 <tr>
                                                     <th>Voucher No.</th>
+                                                    <th>Item No.</th>
+                                                    <th>Quantity</th>
                                                     <th>Amount</th>
                                                     <th>Date</th>
                                                 </tr>
@@ -232,6 +238,8 @@ export default class Detail extends Component {
                                                         return (
                                                             <tr key={item._id}>
                                                                 <td>{item.voucherno}</td>
+                                                                <td>{item.itemno}</td>
+                                                                <td>{item.quantity}</td>
                                                                 <td>{item.amount}</td>
                                                                 <td>{Moment(item.returndate).format('MMM DD, YYYY')}</td>
                                                             </tr>
