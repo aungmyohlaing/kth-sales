@@ -15,12 +15,12 @@ var env = require('dotenv').load();
  * Moogo DB Connection
  */
 //Local MongoDB Connection
-//mongoose.connect('mongodb://192.168.99.170/kth');
+mongoose.connect('mongodb://192.168.99.170/kth');
 // mongoose.connect('mongodb://kth:WlPFZhgaiMSEuFoYXGHb73GbDX04vndb1GPwhBfeKxqC1swLqcDUWgdvpoeP7JKnBgXsEgD9QnkWLwFbvCVekw%3D%3D@kth.documents.azure.com:10255/?ssl=true&replicaSet=globaldb');
 // MS Azure Cosmosdb Connection
 // mongoose.connect(process.env.COSMOSDB_CONSTR+process.env.COSMOSDB_DBNAME+"?ssl=true&replicaSet=globaldb");
 // MongoDB Atlas Connection
- mongoose.connect(process.env.ATLAS_CONSTR);
+// mongoose.connect(process.env.ATLAS_CONSTR);
 var db = mongoose.connection;
 //bind error info
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -565,7 +565,7 @@ router.route('/customer/getdaily')
 
 router.route('/customer/getnewvoucher')
     .post(function (req, res) {
-        var query = newvoucher.find({ customerid: req.body.customerid }).sort({ voucherdate: -1 }).limit(6);
+        var query = newvoucher.find({ customerid: req.body.customerid, quantity: {"$gt":0} }).sort({ voucherdate: -1 }).limit(6);
         query.exec(function (err, data) {
             if (err) res.send(err);
             res.json(data);
@@ -626,7 +626,30 @@ router.route('/dailycollection/update/customer')
         })
     });
 
-
+router.route('/dailycollection/getvouchers')
+    .post(function (req, res) {
+        newvoucher.aggregate([
+            {
+                "$project": {
+                    "customerid": "$customerid",
+                    "voucherno": "$voucherno"
+                }
+            },
+            {
+                "$match": {
+                    "customerid": req.body.customerid
+                }
+            },
+            {
+                "$group": {
+                    _id: "$voucherno"
+                }
+            }
+        ], function (err, data) {
+            if (err) res.send(err);
+            res.json(data);
+        });
+    });
 /**
  * New Voucher Router
  */
@@ -715,12 +738,14 @@ router.route('/returnitems/getvouchers')
             {
                 "$project": {
                     "customerid": "$customerid",
-                    "voucherno": "$voucherno"
+                    "voucherno": "$voucherno",
+                    "quantity": "$quantity"
                 }
             },
             {
                 "$match": {
-                    "customerid": req.body.customerid
+                    "customerid": req.body.customerid,
+                    "quantity": {"$gt":0}
                 }
             },
             {
@@ -735,14 +760,14 @@ router.route('/returnitems/getvouchers')
     });
 router.route('/returnitems/update/voucher')
     .put(function (req, res) {
-        
+
         newvoucher.findOne({ customerid: req.body.customerid, voucherno: req.body.voucherno, itemno: req.body.itemno }, function (err, voucher) {
             if (err) res.send(err);
 
-            
+
             voucher.quantity = voucher.quantity - req.body.quantity;
             voucher.amount = voucher.amount - req.body.amount;
-            
+
             voucher.save(function (err) {
                 if (err) res.send(err);
 
@@ -758,13 +783,15 @@ router.route('/returnitems/getitems')
                 "$project": {
                     "customerid": "$customerid",
                     "voucherno": "$voucherno",
-                    "itemno": "$itemno"
+                    "itemno": "$itemno", 
+                    "quantity": "$quantity"
                 }
             },
             {
                 "$match": {
                     "customerid": req.body.customerid,
-                    "voucherno": req.body.voucherno
+                    "voucherno": req.body.voucherno,
+                    "quantity": {"$gt":0}
                 }
             }
         ], function (err, data) {
