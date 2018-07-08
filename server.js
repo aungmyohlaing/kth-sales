@@ -15,12 +15,12 @@ var env = require('dotenv').load();
  * Moogo DB Connection
  */
 //Local MongoDB Connection
-mongoose.connect('mongodb://192.168.99.170/kth');
+//mongoose.connect('mongodb://192.168.99.170/kth');
 // mongoose.connect('mongodb://kth:WlPFZhgaiMSEuFoYXGHb73GbDX04vndb1GPwhBfeKxqC1swLqcDUWgdvpoeP7JKnBgXsEgD9QnkWLwFbvCVekw%3D%3D@kth.documents.azure.com:10255/?ssl=true&replicaSet=globaldb');
 // MS Azure Cosmosdb Connection
 // mongoose.connect(process.env.COSMOSDB_CONSTR+process.env.COSMOSDB_DBNAME+"?ssl=true&replicaSet=globaldb");
 // MongoDB Atlas Connection
-// mongoose.connect(process.env.ATLAS_CONSTR);
+ mongoose.connect(process.env.ATLAS_CONSTR);
 var db = mongoose.connection;
 //bind error info
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -565,7 +565,7 @@ router.route('/customer/getdaily')
 
 router.route('/customer/getnewvoucher')
     .post(function (req, res) {
-        var query = newvoucher.find({ customerid: req.body.customerid, quantity: {"$gt":0} }).sort({ voucherdate: -1 }).limit(6);
+        var query = newvoucher.find({ customerid: req.body.customerid, quantity: { "$gt": 0 } }).sort({ voucherdate: -1 }).limit(6);
         query.exec(function (err, data) {
             if (err) res.send(err);
             res.json(data);
@@ -637,7 +637,8 @@ router.route('/dailycollection/getvouchers')
             },
             {
                 "$match": {
-                    "customerid": req.body.customerid
+                    "customerid": req.body.customerid,
+                    "voucherno": req.body.voucherno
                 }
             },
             {
@@ -650,6 +651,62 @@ router.route('/dailycollection/getvouchers')
             res.json(data);
         });
     });
+
+router.route('/dailycollection/getItemsByVoucher')
+    .post(function (req, res) {
+        newvoucher.aggregate([
+            {
+                "$project": {
+                    "customerid": "$customerid",
+                    "voucherno": "$voucherno",
+                    "amount": "$amount"
+                }
+            },
+            {
+                "$match": {
+                    "customerid": req.body.customerid,
+                    "voucherno": req.body.voucherno                    
+                }
+            },
+            {
+                "$group": {
+                    _id: "$voucherno",
+                    totalamount: {"$sum":"$amount"}
+                }
+            }
+        ], function (err, data) {
+            if (err) res.send(err);
+            res.json(data);
+        });
+    })
+
+    router.route('/dailycollection/getCollectedVoucher')
+    .post(function (req, res) {
+        dailycollection.aggregate([
+            {
+                "$project": {
+                    "customerid": "$customerid",
+                    "voucherno": "$voucherno",
+                    "amount": "$amount"
+                }
+            },
+            {
+                "$match": {
+                    "customerid": req.body.customerid,
+                    "voucherno": req.body.voucherno                    
+                }
+            },
+            {
+                "$group": {
+                    _id: "$voucherno",
+                    totalamount: {"$sum":"$amount"}
+                }
+            }
+        ], function (err, data) {
+            if (err) res.send(err);
+            res.json(data);
+        });
+    })
 /**
  * New Voucher Router
  */
@@ -739,13 +796,15 @@ router.route('/returnitems/getvouchers')
                 "$project": {
                     "customerid": "$customerid",
                     "voucherno": "$voucherno",
-                    "quantity": "$quantity"
+                    "quantity": "$quantity",
+                    "amount": "$amount"
                 }
             },
             {
                 "$match": {
                     "customerid": req.body.customerid,
-                    "quantity": {"$gt":0}
+                    "quantity": { "$gt": 0 },
+                    "amount": { "$gt":0}
                 }
             },
             {
@@ -783,7 +842,7 @@ router.route('/returnitems/getitems')
                 "$project": {
                     "customerid": "$customerid",
                     "voucherno": "$voucherno",
-                    "itemno": "$itemno", 
+                    "itemno": "$itemno",
                     "quantity": "$quantity"
                 }
             },
@@ -791,7 +850,7 @@ router.route('/returnitems/getitems')
                 "$match": {
                     "customerid": req.body.customerid,
                     "voucherno": req.body.voucherno,
-                    "quantity": {"$gt":0}
+                    "quantity": { "$gt": 0 }
                 }
             }
         ], function (err, data) {

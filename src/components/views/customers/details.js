@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PageHeader, Grid, Row, Col, Image, Table, Button } from 'react-bootstrap';
+import { PageHeader, Grid, Row, Col, Image, Table, Button, Panel } from 'react-bootstrap';
 import Header from '../../header';
 import Footer from '../../footer';
 import userlogo from '../../images/businessman.png';
@@ -39,7 +39,7 @@ export default class Detail extends Component {
                 voucherno: '',
                 amount: '',
                 createdate: '',
-                voucherdate: '',                
+                voucherdate: '',
             }],
             returnitem: [{
                 _id: '',
@@ -47,7 +47,7 @@ export default class Detail extends Component {
                 voucherno: '',
                 amount: '',
                 createdate: '',
-                returndate: '',                
+                returndate: '',
             }]
 
         }
@@ -61,21 +61,21 @@ export default class Detail extends Component {
         });
 
         Service().getDailyCollection(params.id).then(res => {
-            this.setState({ collection: res });            
+            this.setState({ collection: res });
         });
 
         Service().getNewVouchers(params.id).then(res => {
-            this.setState({ newvoucher: res });            
+            this.setState({ newvoucher: res });
         });
 
         Service().getReturnItems(params.id).then(res => {
-            this.setState({ returnitem: res });            
+            this.setState({ returnitem: res });
         });
     }
 
-    
 
-    render() {        
+
+    render() {
         // function MoreButton(){
         //     if(this.state.collection.lenght >= 7){
         //         return <Button bsStyle="primary" block>More..</Button>
@@ -83,7 +83,7 @@ export default class Detail extends Component {
         //     else return null;
         // }
 
-        return (            
+        return (
             <div>
                 <Header />
                 <div id="mainview" className="container">
@@ -91,7 +91,7 @@ export default class Detail extends Component {
                     <Grid>
                         <Row>
                             <Col xs={12} sm={12} md={3} lg={3} className="cusdetail">
-                                <Row >
+                                <Row style={{ margin: '10px' }} >
                                     <Col sm={12} md={12} lg={12} className="text-center">
                                         <Image src={userlogo} alt="Image" width={200} height={200} circle thumbnail />
                                     </Col>
@@ -136,125 +136,161 @@ export default class Detail extends Component {
                             <Col xs={12} sm={12} md={9} lg={9}>
 
                                 <Row>
-                                    <Col sm={12} md={5} lg={5}>
-                                        <h3>SALES AMOUNT: <span className="capitalamount">{this.state.customer.salesamount}K</span></h3>
+                                    <Col sm={12} md={4} lg={4}>
+                                        <Panel bsStyle="primary">
+                                            <Panel.Heading>
+                                                <Panel.Title componentClass="h3">Sales Amount</Panel.Title>
+                                            </Panel.Heading>
+                                            <Panel.Body className="text-center"><h1><span>{this.state.customer.salesamount}K</span></h1></Panel.Body>
+                                        </Panel>
                                     </Col>
-                                    <Col sm={12} md={5} lg={5}>
-                                        <h3>CURRENT AMOUNT: <span className="currentamount">{this.state.customer.currentamount}K</span></h3>
+                                    <Col sm={12} md={4} lg={4}>
+                                        <Panel bsStyle="success">
+                                            <Panel.Heading>
+                                                <Panel.Title componentClass="h3">Paid Amount</Panel.Title>
+                                            </Panel.Heading>
+                                            <Panel.Body className="text-center"><h1><span>{this.state.customer.salesamount - this.state.customer.currentamount}K</span></h1></Panel.Body>
+                                        </Panel>
+                                    </Col>
+                                    <Col sm={12} md={4} lg={4}>
+                                        <Panel bsStyle="info">
+                                            <Panel.Heading>
+                                                <Panel.Title componentClass="h3">Remaining Amount</Panel.Title>
+                                            </Panel.Heading>
+                                            <Panel.Body className="text-center"><h1><span>{this.state.customer.currentamount}K</span></h1></Panel.Body>
+                                        </Panel>
                                     </Col>
 
                                 </Row>
-                                <Row>
+                                <Row className={this.state.customer.salesamount > 0 ? 'hidden' : ''}>
+                                    <Col sm={12} md={12} lg={12} className="text-center" >
+                                        <div>
+                                            <h1> There is no records yet. </h1>
+                                        </div>
+                                    </Col>
+                                </Row>
+                                <Row className={this.state.collection.length < 1 ? 'hidden': ''}>
                                     <Col sm={12} md={12} lg={12} >
-                                        <hr />
-                                        <h4> Daily Collection</h4>
-                                        <Table striped responsive>
-                                            <thead>
-                                                <tr>
-                                                    <th>Voucher No.</th>
-                                                    <th>Amount</th>
-                                                    <th>Date</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
+                                        <Panel bsStyle="default">
+                                            <Panel.Heading>
+                                                <Panel.Title componentClass="h4">Daily Collection</Panel.Title>
+                                            </Panel.Heading>
+                                            <Panel.Body>
+                                                <Table striped responsive>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Voucher No.</th>
+                                                            <th>Amount</th>
+                                                            <th>Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {
+                                                            this.state.collection.map(function (item) {
+                                                                return (
+                                                                    <tr key={item._id}>
+                                                                        <td>{item.voucherno === '' ? '-' : item.voucherno}</td>
+                                                                        <td>{item.amount}</td>
+                                                                        <td>{Moment(item.collectiondate).format('MMM DD, YYYY')}</td>
+                                                                    </tr>
+                                                                )
+                                                            })
+                                                        }
+                                                    </tbody>
+                                                </Table>
+                                                {/* <MoreButton/>*/}
                                                 {
-                                                    this.state.collection.map(function (item) {
-                                                        return (
-                                                            <tr key={item._id}>
-                                                                <td>{item.voucherno}</td>
-                                                                <td>{item.amount}</td>
-                                                                <td>{Moment(item.collectiondate).format('MMM DD, YYYY')}</td>
-                                                            </tr>
-                                                        )
-                                                    })
+                                                    (this.state.collection.length >= 10) ? <Button bsStyle="primary" block>More...</Button> : null
                                                 }
-                                            </tbody>
-                                        </Table>         
-                                        {/* <MoreButton/>*/}
-                                        {
-                                            (this.state.collection.length >= 4) ? <Button block>More..</Button> : null
+                                            </Panel.Body>
+                                        </Panel>
 
-                                            
-                                        }                                                            
-                                        <hr />
                                     </Col>
                                 </Row>
-                                <Row>
+                                <Row className={this.state.newvoucher.length < 1 ? 'hidden': ''}>
                                     <Col sm={12} md={12} lg={12}>
-                                    
-                                        <h4> Sales</h4>
-                                        <Table striped responsive>
-                                            <thead>
-                                                <tr>
-                                                    <th>Voucher No.</th>
-                                                    <th>Item No.</th>
-                                                    <th>Quantity</th>
-                                                    <th>Amount</th>
-                                                    <th>Date</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
+                                        <Panel bsStyle="default">
+                                            <Panel.Heading>
+                                                <Panel.Title componentClass="h4">Sales</Panel.Title>
+                                            </Panel.Heading>
+                                            <Panel.Body>
+                                                <Table striped responsive>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Voucher No.</th>
+                                                            <th>Item No.</th>
+                                                            <th>Quantity</th>
+                                                            <th>Amount</th>
+                                                            <th>Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {
+                                                            this.state.newvoucher.map(function (item) {
+                                                                return (
+                                                                    <tr key={item._id}>
+                                                                        <td>{item.voucherno}</td>
+                                                                        <td>{item.itemno}</td>
+                                                                        <td>{item.quantity}</td>
+                                                                        <td>{item.amount}</td>
+                                                                        <td>{Moment(item.voucherdate).format('MMM DD, YYYY')}</td>
+                                                                    </tr>
+                                                                )
+                                                            })
+                                                        }
+                                                    </tbody>
+                                                </Table>
+                                                {/* <MoreButton/>*/}
                                                 {
-                                                    this.state.newvoucher.map(function (item) {
-                                                        return (
-                                                            <tr key={item._id}>
-                                                                <td>{item.voucherno}</td>
-                                                                <td>{item.itemno}</td>
-                                                                <td>{item.quantity}</td>
-                                                                <td>{item.amount}</td>
-                                                                <td>{Moment(item.voucherdate).format('MMM DD, YYYY')}</td>
-                                                            </tr>
-                                                        )
-                                                    })
-                                                }
-                                            </tbody>
-                                        </Table>         
-                                        {/* <MoreButton/>*/}
-                                        {
-                                            (this.state.newvoucher.length >= 4) ? <Button block>More..</Button> : null
+                                                    (this.state.newvoucher.length >= 10) ? <Button bsStyle="primary" block>More..</Button> : null
 
-                                            
-                                        }                                                            
-                                        <hr />
+
+                                                }
+                                            </Panel.Body>
+                                        </Panel>
                                     </Col>
                                 </Row>
-                                <Row>
+                                <Row className={this.state.returnitem.length < 1 ? 'hidden': ''}>
                                     <Col sm={12} md={12} lg={12}>
-                                    
-                                        <h4> Return </h4>
-                                        <Table striped responsive>
-                                            <thead>
-                                                <tr>
-                                                    <th>Voucher No.</th>
-                                                    <th>Item No.</th>
-                                                    <th>Quantity</th>
-                                                    <th>Amount</th>
-                                                    <th>Date</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
+                                        <Panel bsStyle="default">
+                                            <Panel.Heading>
+                                                <Panel.Title componentClass="h3">Return</Panel.Title>
+                                            </Panel.Heading>
+                                            <Panel.Body className="text-center">
+                                                <Table striped responsive>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Voucher No.</th>
+                                                            <th>Item No.</th>
+                                                            <th>Quantity</th>
+                                                            <th>Amount</th>
+                                                            <th>Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {
+                                                            this.state.returnitem.map(function (item) {
+                                                                return (
+                                                                    <tr key={item._id}>
+                                                                        <td>{item.voucherno}</td>
+                                                                        <td>{item.itemno}</td>
+                                                                        <td>{item.quantity}</td>
+                                                                        <td>{item.amount}</td>
+                                                                        <td>{Moment(item.returndate).format('MMM DD, YYYY')}</td>
+                                                                    </tr>
+                                                                )
+                                                            })
+                                                        }
+                                                    </tbody>
+                                                </Table>
+                                                {/* <MoreButton/>*/}
                                                 {
-                                                    this.state.returnitem.map(function (item) {
-                                                        return (
-                                                            <tr key={item._id}>
-                                                                <td>{item.voucherno}</td>
-                                                                <td>{item.itemno}</td>
-                                                                <td>{item.quantity}</td>
-                                                                <td>{item.amount}</td>
-                                                                <td>{Moment(item.returndate).format('MMM DD, YYYY')}</td>
-                                                            </tr>
-                                                        )
-                                                    })
-                                                }
-                                            </tbody>
-                                        </Table>         
-                                        {/* <MoreButton/>*/}
-                                        {
-                                            (this.state.returnitem.length >= 4) ? <Button block>More..</Button> : null
+                                                    (this.state.returnitem.length >= 10) ? <Button bsStyle="primary" block>More..</Button> : null
 
-                                            
-                                        }                                                            
-                                        <hr />
+
+                                                }                                                
+                                            </Panel.Body>
+                                        </Panel>                                        
                                     </Col>
                                 </Row>
                             </Col>
@@ -262,7 +298,7 @@ export default class Detail extends Component {
 
                     </Grid>
                 </div>
-                <Footer/>
+                <Footer />
             </div>
         )
     }

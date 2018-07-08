@@ -23,21 +23,21 @@ export default class CollectionForm extends Component {
                     address2: ''
                 }
             ],
-            voucherData: [{
-                customerid: '',
-                voucherno: ''
-            }],
             customerid: '',
             amount: '',
+            voucherno: '',
             selectedDate: moment(),
             createDate: moment(),
             selectedOptions: '',
-            selectedVoucherOptions: '',
             selectValidation: null,
-            selectVoucherValidation: null,
+            voucherValidation: null,
             customerValidation: null,
             amountValidation: null,
-            showAlert: false
+            showAlert: false,
+            alertStyle:'',
+            alertMessage: '',
+            cuamount: '',
+            collectedamount: ''            
         }
 
 
@@ -67,31 +67,19 @@ export default class CollectionForm extends Component {
 
         this.setState({ selectedOptions, selectValidation: null });
         if (selectedOptions === null || selectedOptions === undefined) {
-            //console.log('Selected Value Null');
             this.setState({ selectedOptions: '' });
         } else {
             Service().getById(selectedOptions.value).then(res => {
-                this.setState({ customerById: res, voucherValidation: null, amountValidation: null, customerValidation: null });
+                this.setState({
+                    customerById: res,
+                    voucherValidation: null,
+                    amountValidation: null,
+                    customerValidation: null,
+                    cuamount: ''
+                });
             })
 
-            Service().getVocById(selectedOptions.value).then(res => {
-
-                this.setState({ voucherData: res });
-
-                console.log('Vouchers Data', this.state.voucherData);
-            })
         }
-        //console.log(`Selected:`, this.state.selectedOptions.value);
-    }
-
-    selectedVoucherNoHandleChange = (selectedVoucherOptions) => {
-
-        this.setState({ selectedVoucherOptions, selectVoucherValidation: null });
-        if (selectedVoucherOptions === null || selectedVoucherOptions === undefined) {
-            //console.log('Selected Value Null');
-            this.setState({ selectedVoucherOptions: '' });
-        }
-        //console.log(`Selected:`, this.state.selectedOptions.value);
     }
 
     alertDissmis() {
@@ -105,36 +93,49 @@ export default class CollectionForm extends Component {
         if (this.state.selectedOptions === undefined || this.state.selectedOptions === '') {
             this.setState({ selectValidation: 'error' });
         }
-        else if (this.state.selectedVoucherOptions === undefined || this.state.selectedVoucherOptions === '') {
-            this.setState({ selectVoucherValidation: 'error' });
-        }
         else if (this.state.amount === undefined || this.state.amount === '') {
             this.setState({ amountValidation: 'error' });
         }
-        else {
-
-            let collectionData = {
-                customerid: this.state.customerById._id,
-                voucherno: this.state.voucherData.voucherno,
-                selectedDate: this.state.selectedDate,
-                createDate: this.state.createDate,
-                amount: this.state.amount
-            }
-
-            Service().save(collectionData).then(res => {
-
-                let updatedAmount = this.state.customerById.currentamount - this.state.amount;
-                let updateCustomerAmt = {
-                    customerid: this.state.customerById._id,
-                    currentamount: updatedAmount
+        else {            
+            let isvoucher;
+            if (this.state.voucherno === '') {
+                isvoucher = true;
+            } else {                 
+                 Service().checkVoucher(this.state.customerById._id, this.state.voucherno).then(res => {                    
+                    isvoucher = res;
+                });
                 }
 
-                Service().update_customer(updateCustomerAmt).then(res => {
-                    this.setState({ voucher: '', selectedDate: moment(), amount: '', selectedOptions: '', customerById: '', selectedVoucherOptions: '' });
-                });
-                this.setState({ showAlert: true });
+            if (isvoucher) {
+                let collectionData = {
+                    customerid: this.state.customerById._id,
+                    voucherno: this.state.voucherno,
+                    selectedDate: this.state.selectedDate,
+                    createDate: this.state.createDate,
+                    amount: this.state.amount
+                }
+
+                Service().save(collectionData).then(res => {
+
+                    let updatedAmount = this.state.customerById.currentamount - this.state.amount;
+                    let updateCustomerAmt = {
+                        customerid: this.state.customerById._id,
+                        currentamount: updatedAmount
+                    }
+
+                    Service().update_customer(updateCustomerAmt).then(res => {
+                        this.onCancel();
+                    });
+
+                    this.setState({ showAlert: true, alertStyle:'success', alertMessage: 'Successfully Saved!' });
+                    this.alertDissmis();
+                })
+            }
+            else {
+                this.setState({ voucherValidation: 'error' });
+                this.setState({ showAlert: true, alertStyle:'danger', alertMessage: 'Voucher number is not correct.' });
                 this.alertDissmis();
-            })
+            }
 
         }
 
@@ -147,11 +148,14 @@ export default class CollectionForm extends Component {
             selectedVoucherOptions: '',
             selectedDate: moment(),
             amount: '',
+            cuamount: '',
+            collectedamount: '',
             customerid: '',
             customerValidation: null,
             amountValidation: null,
             selectValidation: null,
-            selectVoucherValidation: null
+            selectVoucherValidation: null,
+            voucherValidation: null
         });
 
     }
@@ -182,7 +186,7 @@ export default class CollectionForm extends Component {
                                         <Select selectedOptions={this.state.selectedOptions}
                                             placeHolder="Select a customer"
                                             selectedHandleChange={this.selectedHandleChange}
-                                            selectTo="customers" />
+                                            selectTo="return-customers" />
                                         <FormControl.Feedback />
                                     </InputGroup>
 
@@ -198,42 +202,50 @@ export default class CollectionForm extends Component {
                         </Row>
                         <Row>
                             <Col sm={12} md={6} lg={6}>
-                                <FormGroup validationState={this.state.selectVoucherValidation}>
+                                <FormGroup validationState={this.state.voucherValidation} >
                                     <ControlLabel>Voucher No.</ControlLabel>
                                     <InputGroup>
                                         <InputGroup.Addon><i className="fa fa-hashtag fa" aria-hidden="true"></i></InputGroup.Addon>
-                                        <Select selectedOptions={this.state.selectedVoucherOptions}
-                                            selectedHandleChange={this.selectedVoucherNoHandleChange}
-                                            placeHolder="Select a voucher"
-                                            selectTo="voucherno" voudata={this.state.voucherData} />
+                                        <FormControl
+                                            type="text"
+                                            name="voucherno"
+                                            value={this.state.voucherno}
+                                            onChange={this.handlerChange}
+                                            placeholder="Voucher Number">
+                                        </FormControl>
 
                                         <FormControl.Feedback />
                                     </InputGroup>
                                 </FormGroup>
                             </Col>
                             <Col sm={12} md={6} lg={6}>
-                                <FormGroup validationState={this.state.amountValidation}>
-                                    <ControlLabel>Collection Amount</ControlLabel>
-                                    <InputGroup>
-                                        <InputGroup.Addon><i className="fa fa-money fa" aria-hidden="true"></i></InputGroup.Addon>
-                                        <FormControl
-                                            type="text"
-                                            name="amount"
-                                            value={this.state.amount}
-                                            onChange={this.handlerChange}
-                                            placeholder="Amount">
-                                        </FormControl>
-                                        <FormControl.Feedback />
-                                    </InputGroup>
-                                </FormGroup>
+                                <Row>
+                                    <Col sm={12} md={12} lg={12}>
+                                        <FormGroup validationState={this.state.amountValidation}>
+                                            <ControlLabel>Collection Amount</ControlLabel>
+                                            <InputGroup>
+                                                <InputGroup.Addon><i className="fa fa-money fa" aria-hidden="true"></i></InputGroup.Addon>
+                                                <FormControl
+                                                    type="text"
+                                                    name="amount"
+                                                    value={this.state.amount}
+                                                    onChange={this.handlerChange}
+                                                    placeholder="Amount">
+                                                </FormControl>
+                                                <FormControl.Feedback />
+                                            </InputGroup>
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+
                             </Col>
                         </Row>
                         <Row>
                             <Col xs={12} md={12} lg={12}>
                                 <SaveAlert showAlert={this.state.showAlert}
                                     onDismiss={this.onhandleDissmis}
-                                    alertStyle="success"
-                                    alertMessage="Successfully Saved!" />
+                                    alertStyle={this.state.alertStyle}
+                                    alertMessage={this.state.alertMessage} />
                             </Col>
                         </Row>
                         <Row>

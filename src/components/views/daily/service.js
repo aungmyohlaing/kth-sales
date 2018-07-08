@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export default Service =>({
+export default Service => ({
     get() {
         try {
             return axios.get('/api/customer')
@@ -16,9 +16,9 @@ export default Service =>({
     getById(v) {
         try {
             let customer = { customerid: v }
-            
+
             return axios.post('/api/customer/getById', customer)
-                .then(res => {                    
+                .then(res => {
                     return res.data;
                 })
         }
@@ -27,44 +27,46 @@ export default Service =>({
             return null;
         }
     },
-    getVocById(v) {
+    checkVoucher(cuid, vno) {
         try {
-            let customer = { customerid: v }
-            
+            let customer = { customerid: cuid, voucherno: vno }
+
             return axios.post('/api/dailycollection/getvouchers', customer)
                 .then(res => {                    
-                    return res.data;
+                    if (res.data.length > 0)
+                        return true
+                    else return false
                 })
         }
-        catch (err) {
-            console.log(err);
-            return null;
+        catch (e) {
+            console.log(e);
+            return null
         }
     },
-    save(object){
-        try{
+    save(object) {
+        try {
             let dailycollection = object;
 
             return axios.post('/api/dailycollection', dailycollection)
-                .then(res => {                    
+                .then(res => {
                     return res.data;
                 })
 
         }
-        catch(e){
+        catch (e) {
             console.log(e);
             return null;
         }
     },
-    update_customer(object){
+    update_customer(object) {
         let currentamount = object;
-        try{
+        try {
             return axios.put('/api/dailycollection/update/customer', currentamount)
-                .then(res => {                    
+                .then(res => {
                     return res.data;
                 })
         }
-        catch(err){
+        catch (err) {
             console.log(err);
             return null;
         }

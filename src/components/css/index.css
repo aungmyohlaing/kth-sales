@@ -65,17 +65,25 @@ a:hover{
 
 .cusdetail {
   padding-right: 15px;
-  border-right: .5px solid silver;
+  /* border: .5px solid silver; */
+  box-shadow: .5px .5px .5px .5px silver;
+  /* border-right: .5px solid silver; */
 }
 .cusdetailcol {
   padding-right: 5px;
 }
 
 .cusdetailrow{
-  margin-right: 5px;  
+  /* margin: 5px;   */
   padding-top: 10px;
   padding-bottom: 10px;
-  border-bottom: .5px solid silver;
+  color: white;
+  background-color: #0d47a1;
+  /* border-bottom: .5px solid silver; */
+}
+
+.hidden {
+  display: none;
 }
 
 .top-arrow {
