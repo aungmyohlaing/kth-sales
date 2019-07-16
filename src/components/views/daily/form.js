@@ -93,49 +93,48 @@ export default class CollectionForm extends Component {
         if (this.state.selectedOptions === undefined || this.state.selectedOptions === '') {
             this.setState({ selectValidation: 'error' });
         }
+        else if (this.state.voucherno === undefined || this.state.voucherno === ''){
+            this.setState({ voucherValidation: 'error' });
+        }
         else if (this.state.amount === undefined || this.state.amount === '') {
             this.setState({ amountValidation: 'error' });
-        }
-        else {            
-            let isvoucher;
-            if (this.state.voucherno === '') {
-                isvoucher = true;
-            } else {                 
-                 Service().checkVoucher(this.state.customerById._id, this.state.voucherno).then(res => {                    
-                    isvoucher = res;
-                });
-                }
-
-            if (isvoucher) {
-                let collectionData = {
-                    customerid: this.state.customerById._id,
-                    voucherno: this.state.voucherno,
-                    selectedDate: this.state.selectedDate,
-                    createDate: this.state.createDate,
-                    amount: this.state.amount
-                }
-
-                Service().save(collectionData).then(res => {
-
-                    let updatedAmount = this.state.customerById.currentamount - this.state.amount;
-                    let updateCustomerAmt = {
-                        customerid: this.state.customerById._id,
-                        currentamount: updatedAmount
+        }        
+        else {                                        
+                 Service().checkVoucher(this.state.customerById._id, this.state.voucherno).then(res => {           
+                                   
+                    if (res){
+                        let collectionData = {
+                            customerid: this.state.customerById._id,
+                            voucherno: this.state.voucherno,
+                            selectedDate: this.state.selectedDate,
+                            createDate: this.state.createDate,
+                            amount: this.state.amount
+                        }
+        
+                        Service().save(collectionData).then(res => {
+        
+                            let updatedAmount = this.state.customerById.currentamount - this.state.amount;
+                            let updateCustomerAmt = {
+                                customerid: this.state.customerById._id,
+                                currentamount: updatedAmount
+                            }
+        
+                            Service().update_customer(updateCustomerAmt).then(res => {
+                                this.onCancel();
+                            });
+        
+                            this.setState({ showAlert: true, alertStyle:'success', alertMessage: 'Successfully Saved!' });
+                            this.alertDissmis();
+                        })
                     }
-
-                    Service().update_customer(updateCustomerAmt).then(res => {
-                        this.onCancel();
-                    });
-
-                    this.setState({ showAlert: true, alertStyle:'success', alertMessage: 'Successfully Saved!' });
-                    this.alertDissmis();
-                })
-            }
-            else {
-                this.setState({ voucherValidation: 'error' });
+                    else {
+                        this.setState({ voucherValidation: 'error' });
                 this.setState({ showAlert: true, alertStyle:'danger', alertMessage: 'Voucher number is not correct.' });
                 this.alertDissmis();
-            }
+                    }
+                     
+
+                });                       
 
         }
 
@@ -151,6 +150,7 @@ export default class CollectionForm extends Component {
             cuamount: '',
             collectedamount: '',
             customerid: '',
+            voucherno:'',
             customerValidation: null,
             amountValidation: null,
             selectValidation: null,
