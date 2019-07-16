@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
-ObjectID = Schema.Objectid;
+ObjectID = Schema.ObjectId;
 
 var capital = new Schema({
     capitalId: ObjectID,

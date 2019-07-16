@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Panel, Glyphicon } from 'react-bootstrap';
+import { Row, Col, Glyphicon } from 'react-bootstrap';
 import Services from './service';
 
 export default class averageByPeriod extends Component {
@@ -79,7 +79,7 @@ export default class averageByPeriod extends Component {
         return (
             <Row>
                 <Col sm={12}>
-                    <Panel bsStyle={(self.state.currentAverage > self.state.lastAverage)? "success" : "danger"}>
+                    {/* <Panel bsStyle={(self.state.currentAverage > self.state.lastAverage)? "success" : "danger"}>
                         <Panel.Heading>
                             <Panel.Title componentClass="h3">{title}</Panel.Title>
                         </Panel.Heading>
@@ -87,7 +87,7 @@ export default class averageByPeriod extends Component {
                             <CompareTotal />
                             <p>{description} {self.state.lastAverage} Ks</p>
                         </Panel.Body>
-                    </Panel>
+                    </Panel> */}
                 </Col>
             </Row>
         )
