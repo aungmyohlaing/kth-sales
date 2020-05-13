@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Glyphicon } from 'react-bootstrap';
+import { Row, Col, Panel, Glyphicon } from 'react-bootstrap';
 import Services from './service';
 
 export default class averageByPeriod extends Component {
@@ -54,11 +54,11 @@ export default class averageByPeriod extends Component {
              */
             let lastYear = new Date().getFullYear() - 1;
             Services().getYearlyTotalSales(lastYear).then(res => {
-
+                // console.log("Yearly Total Sales", res)
                 if (res.length === 0) {
                     this.setState({ lastAverage: 0 });
                 }
-                else this.setState({ lastAverage: res });
+                else this.setState({ lastAverage: res[0].totalsales });              
 
             });
            
@@ -79,7 +79,7 @@ export default class averageByPeriod extends Component {
         return (
             <Row>
                 <Col sm={12}>
-                    {/* <Panel bsStyle={(self.state.currentAverage > self.state.lastAverage)? "success" : "danger"}>
+                    <Panel bsStyle={(self.state.currentAverage > self.state.lastAverage)? "success" : "danger"}>
                         <Panel.Heading>
                             <Panel.Title componentClass="h3">{title}</Panel.Title>
                         </Panel.Heading>
@@ -87,7 +87,7 @@ export default class averageByPeriod extends Component {
                             <CompareTotal />
                             <p>{description} {self.state.lastAverage} Ks</p>
                         </Panel.Body>
-                    </Panel> */}
+                    </Panel>
                 </Col>
             </Row>
         )

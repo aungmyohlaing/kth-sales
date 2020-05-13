@@ -42,5 +42,6 @@
     "eject": "react-scripts eject",
     "dev": "nf start -p 3100",
     "unit-test": "jasmine"
-  }
+  },
+  "proxy": "http://localhost:3200"
 }
