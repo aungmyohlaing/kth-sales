@@ -6,33 +6,40 @@
     "npm": "^5.7.1"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.29",
+    "@fortawesome/free-solid-svg-icons": "^5.13.1",
+    "@fortawesome/react-fontawesome": "^0.1.11",
+    "axios": "^0.18.1",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.2",
+    "bootstrap": "^4.5.0",
     "chart.js": "^2.7.2",
     "concurrently": "^3.5.1",
     "cors": "^2.8.4",
     "create-react-class": "^15.6.3",
     "dotenv": "^5.0.1",
     "express": "^4.16.2",
-    "foreman": "^2.0.0",
+    "foreman": "^3.0.1",
+    "formik": "^2.1.4",
     "jasmine": "^3.1.0",
     "moment": "^2.21.0",
-    "mongoose": "^5.0.7",
-    "nodemon": "^1.15.1",
+    "mongoose": "^5.9.20",
+    "nodemon": "^2.0.4",
     "prop-types": "^15.6.1",
-    "react": "^16.2.0",
-    "react-bootstrap": "^0.32.1",
-    "react-chartjs-2": "^2.7.0",
-    "react-datepicker": "^1.2.2",
-    "react-dom": "^16.2.0",
-    "react-redux": "^5.0.7",
-    "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.0",
-    "react-select": "^1.2.1",
+    "react": "next",
+    "react-bootstrap": "^1.0.1",
+    "react-chartjs-2": "^2.9.0",
+    "react-datepicker": "^3.0.0",
+    "react-dom": "next",
+    "react-fontawesome": "^1.7.1",
+    "react-redux": "^7.2.0",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^3.4.1",
+    "react-select": "^3.1.0",
     "redux": "^4.0.0",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "yup": "^0.29.1"
   },
   "scripts": {
     "start": "nodemon server.js",
@@ -43,5 +50,17 @@
     "dev": "nf start -p 3100",
     "unit-test": "jasmine"
   },
-  "proxy": "http://localhost:3200"
+  "proxy": "http://localhost:3200",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }

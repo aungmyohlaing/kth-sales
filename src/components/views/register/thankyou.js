@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Col, Button, Navbar, Nav, Panel } from 'react-bootstrap';
+import { Col, Button, Navbar, Nav } from 'react-bootstrap';
 import RouterLink from '../../commons/linkContainer';
 import Footer from '../../footer';
 
@@ -23,13 +23,13 @@ export default class thankyou extends Component {
                 </Navbar>
                 <div className="container thankyoubox">
                     <Col xs={12} md={6} lg={6} mdOffset={3} lgOffset={3} className="text-center">
-                        <Panel>
-                            <Panel.Body>
+                        
+                            <div>
                                 <h1>Thank You!</h1>
                                 <h4>Your registration is successfully completed.</h4>
                                 <p><Button bsStyle="primary" href="/login" >Please Login Here</Button></p>
-                            </Panel.Body>
-                        </Panel>
+                            </div>
+                        
 
 
                     </Col>

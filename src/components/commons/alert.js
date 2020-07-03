@@ -3,12 +3,12 @@ import { Alert } from 'react-bootstrap';
 
 export default class AlertComponent extends React.Component {
     render() {
-        const {showAlert, onDismiss, alertStyle, alertMessage } = this.props;
+        const {showAlert, onClose, alertStyle, alertMessage } = this.props;
 
         if (showAlert){            
             return (
                 <div>
-                    <Alert bsStyle={alertStyle} onDismiss={onDismiss}>
+                    <Alert variant={alertStyle} onClose={onClose}>
                         <h4>{alertMessage}</h4>                                        
                     </Alert>
                 </div>

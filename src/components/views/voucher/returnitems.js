@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { PageHeader } from 'react-bootstrap';
 import Header from '../../header';
 import ReturnForm from './form';
 import Footer from '../../footer';
@@ -10,8 +9,9 @@ export default class ReturnItems extends Component {
             <div >
                 <Header />
                 <div id="mainview" className="container">
-                    <PageHeader>Return <small>add return items</small></PageHeader>
-                    <ReturnForm formtype={'returnvoucher'}/>
+                    <h2>Return <small>add return items</small></h2>
+                    <hr/>
+                    <ReturnForm formtype={'return-customers'}/>
                 </div>
                 <Footer />
             </div>

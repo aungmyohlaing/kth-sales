@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Table, Button } from 'react-bootstrap';
-import DeletModal from '../../commons/modal';
+import DeleteModal from '../../commons/modal';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FetchUserData, DeleteUser, isModalShow, getUserId } from '../../../redux/actions';
@@ -17,12 +17,12 @@ class UserList extends Component {
     }
 
     handleModalClose() {
-        this.props.ismodalshow(false);        
+        this.props.isModalShow(false);        
     }
 
     handleModalShow(id) {          
-        this.props.getuserid(id);    
-        this.props.ismodalshow(true);
+        this.props.getUserId(id);    
+        this.props.isModalShow(true);
     }
 
     onYesClick(){                
@@ -63,7 +63,7 @@ class UserList extends Component {
                                     <td>{item.email}</td>
                                     <td>{item.userType}</td>
                                     <td>
-                                        <Button bsSize="small" bsStyle="danger" 
+                                        <Button size="sm" variant="danger" 
                                             onClick={()=> this.handleModalShow(item._id)} 
                                             >
                                             Delete
@@ -77,7 +77,7 @@ class UserList extends Component {
                         
                     </tbody>
                 </Table>
-                <DeletModal show={this.props.showModal}
+                <DeleteModal show={this.props.showModal}
                     title="User Deleting..."
                     bodytext="Are you sure to delete this user?"
                     onNo={this.handleModalClose}
@@ -93,9 +93,9 @@ UserList.propTypes = {
     deleteUser: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     showModal: PropTypes.bool.isRequired,
-    ismodalshow: PropTypes.func.isRequired,
+    isModalShow: PropTypes.func.isRequired,
     userId: PropTypes.string.isRequired,
-    getuserid: PropTypes.func.isRequired
+    getUserId: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => {            
@@ -111,8 +111,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserData: () => dispatch(FetchUserData()),
         deleteUser:(id) => dispatch(DeleteUser(id)),
-        ismodalshow:(show) => dispatch(isModalShow(show)),
-        getuserid:(id) => dispatch(getUserId(id))
+        isModalShow:(show) => dispatch(isModalShow(show)),
+        getUserId:(id) => dispatch(getUserId(id))
     };
 };
 

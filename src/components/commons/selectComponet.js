@@ -10,7 +10,7 @@ export default class SelectComponet extends React.Component {
         }]
     }    
 
-    componentWillMount() {
+    componentDidMount() {
         var self = this;
 
         if (self.props.selectTo.toString().toLowerCase() === 'customers') {
@@ -37,8 +37,8 @@ export default class SelectComponet extends React.Component {
 
     render() {
         const { selectedOptions, selectedHandleChange, placeHolder } = this.props;
-        const value = selectedOptions && selectedOptions.value;
-
+        const value = selectedOptions ;              
+        //isValid === true ? '#ced4da' : '#dc3545' 
         return (
 
             <Select
@@ -48,7 +48,7 @@ export default class SelectComponet extends React.Component {
                 onChange={selectedHandleChange}
                 options={this.state.options}
                 clearable={false}
-                placeholder={placeHolder}                
+                placeholder={placeHolder}                                
             />
         )
     }

@@ -12,7 +12,7 @@ const Modals = ({ show, title, bodytext, onNo, onYes  }) => (
 
             <Modal.Footer>
                 <Button onClick={onNo}>No</Button>
-                <Button bsStyle="primary" onClick={onYes}>Yes</Button>
+                <Button variant="primary" onClick={onYes}>Yes</Button>
             </Modal.Footer>
         </Modal>
     </div>

@@ -12,7 +12,7 @@ var dateControl = CreateClass({
                 <DatePicker
                     selected={this.props.selected}
                     onChange={this.props.onChange.bind(this)}
-                    dateFormat="MMMM DD, YYYY"
+                    dateFormat="MMMM dd, yyyy"
                     isClearable={true}
                     placeholderText="Select a Date"
                 />

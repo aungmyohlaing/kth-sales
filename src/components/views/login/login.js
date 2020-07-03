@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 // import users from '../../../api/users';
-import { Col, Nav, Navbar, Row, Well } from 'react-bootstrap';
+import { Col, Nav, Navbar, Row } from 'react-bootstrap';
 import LoginForm from './form';
-import RouterLink from '../../commons/linkContainer';
 import Storage from '../../commons/localStogare';
 import Footer from '../../footer';
 import axios from 'axios';
@@ -20,7 +19,8 @@ export default class login extends Component {
             error: false,
             userValidationState: null,
             pwdValidationState: null,
-            alertVisible: false            
+            alertVisible: false,
+            validated: false               
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -47,16 +47,19 @@ export default class login extends Component {
 
     }
 
-    onSubmit(event) {
-        if (this.state.username === undefined || this.state.username === '') {
+    onSubmit(event) {        
+        if (this.state.username === '' || this.state.password === ''){
+            this.setState({ validated: true})
+        }
+        else if (this.state.username === undefined || this.state.username === '') {
             this.setState({ userValidationState: 'error' });
         } else if (this.state.password === undefined || this.state.password === '') {
             this.setState({ pwdValidationState: 'error' });
         }
         else {
             const { history } = this.props;
-            //let loginError;
-
+            this.setState({ validated: false })
+            //let loginError;            
             let userdata = {
                 username: this.state.username,
                 password: this.state.password
@@ -105,25 +108,21 @@ export default class login extends Component {
 
     render() {
         return (
-            <div>
-                <Navbar inverse collapseOnSelect fluid>
-                    <Navbar.Header>
-                        <Navbar.Brand>
-                            <Link to="/login">KTH</Link>
-                        </Navbar.Brand>
-                        <Navbar.Toggle />
-                    </Navbar.Header>
-                    <Navbar.Collapse>
-                        <Nav pullRight>                            
-                            <RouterLink to='/login'>Login</RouterLink>
-                        </Nav>
-                    </Navbar.Collapse>
+            <div>                
+                <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                <Navbar.Brand as={Link} to="/home">KTH</Navbar.Brand>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
+                    <Nav>
+                        <Nav.Link as={Link} to='/login'>Login</Nav.Link>
+                    </Nav>
+                </Navbar.Collapse>
                 </Navbar>
                 <div className="container" style={{ 'marginTop': '35px','marginBottom':'95px' }}  >
                     <div>
-                        <Row >
-                            <Col xs={12} md={4} lg={4} lgOffset={4} className="text-center">
-                                <Well>
+                        <Row className="justify-content-center" >
+                            <Col xs={12} sm={12} md={7} lg={5} >
+                                <div >
                                     <LoginForm
                                         usernamee={this.state.username}
                                         password={this.state.password}
@@ -134,13 +133,17 @@ export default class login extends Component {
                                         handlerAlertDismiss={this.handlerAlertDismiss}
                                         handlerKeyPress={this.handlerKeyPress}
                                         alertVisible={this.state.alertVisible}
+                                        validated={this.state.validated}                                      
                                         users={this.state.users} />
-                                </Well>
+                                </div>
                             </Col>
                         </Row>
                     </div>
                 </div>
-                <Footer />
+                <div style={{ position: 'fixed', top: 'calc(100% - 80px)', width: '100%' }}>
+                    <Footer />
+                </div>
+                
             </div>
         )
     }

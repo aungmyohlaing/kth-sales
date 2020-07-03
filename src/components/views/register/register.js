@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Col, Row, Well } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import RegisterForm from '../register/form';
 import axios from 'axios';
 import Storage from '../../../components/commons/localStogare';
@@ -17,14 +17,11 @@ export default class register extends Component {
             username: '',
             password: '',
             confirmPwd: '',
-            usertype:'User',
-            userFullNameValidation: null,
-            emailValidation: null,
-            userNameValidation: null,
-            pwdValidation: null,
-            conPwdValidation: null,
+            usertype:'User',            
+            emailValidation: false,            
             showAlert: false,
-            showUserAlert: false
+            showUserAlert: false,
+            validated: false
         }
 
         this.onSubmit = this.onSubmit.bind(this);
@@ -68,28 +65,29 @@ export default class register extends Component {
     onSubmit(event) {
 
         if (this.state.fullname === undefined || this.state.fullname === '') {
-            this.setState({ userFullNameValidation: 'error' });
+            this.setState({ validated: true });
         }
         else if (this.state.email === undefined || this.state.email === '') {
-            this.setState({ emailValidation: 'error' });
+            this.setState({ emailValidation: 'error',validated: true });
         }
         else if (!this.state.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)) {
-            this.setState({ emailValidation: 'error' });
+            this.setState({ emailValidation: true, validated: true });
         }
         else if (this.state.username === undefined || this.state.username === '') {
-            this.setState({ userNameValidation: 'error' });
+            this.setState({ validated: true });
         }
         else if (this.state.password === undefined || this.state.password === '') {
-            this.setState({ pwdValidation: 'error' });
+            this.setState({ validated: true });
         }
         else if (this.state.confirmPwd === undefined || this.state.confirmPwd === '') {
-            this.setState({ conPwdValidation: 'error' });
+            this.setState({ validated: true });
         }
         else if (this.state.password !== this.state.confirmPwd) {
             this.setState({ showAlert: true });
         }
         else {
 
+            this.setState({ validated: false });
             var users = {
                 fullname: this.state.fullname,
                 email: this.state.email,
@@ -132,30 +130,28 @@ export default class register extends Component {
             <div>
                 <Header />
                 <div className="container">
-                    <div className="container" style={{ 'marginTop': '100px', 'marginBottom':'25px'}}>
+                    <div className="container" style={{ 'marginTop': '50px', 'marginBottom':'25px'}}>
                         <div>
-                            <Row>
-                                <Col xs={12} md={4} lg={4} lgOffset={4}>
-                                    <Well>
+                            <Row className="justify-content-center">
+                                <Col xs={12} md={6} lg={6} >
+                                    <div>
                                         <RegisterForm
                                             fullname={this.state.fullname}
                                             email={this.state.email}
                                             username={this.state.username}
                                             password={this.state.password}
-                                            confirmPwd={this.state.confirmPwd}
-                                            userFullNameValidation={this.state.userFullNameValidation}
-                                            emailValidation={this.state.emailValidation}
-                                            userNameValidation={this.state.userNameValidation}
-                                            pwdValidation={this.state.pwdValidation}
-                                            conPwdValidation={this.state.conPwdValidation}
+                                            confirmPwd={this.state.confirmPwd}                                           
+                                            emailValidation={this.state.emailValidation}                                           
                                             onChange={this.handleChange}
                                             onSubmit={this.onSubmit}
                                             showAlert={this.state.showAlert}
                                             showUserAlert={this.state.showUserAlert}
                                             handlerAlertDismiss={this.handlerAlertDismiss} 
                                             usertype = {this.state.usertype}
-                                            radiohandlerChange = {this.radiohandleChange}/>
-                                    </Well>
+                                            radiohandlerChange = {this.radiohandleChange}
+                                            validated ={this.state.validated}
+                                            />
+                                    </div>
                                 </Col>
                             </Row>
                         </div>
