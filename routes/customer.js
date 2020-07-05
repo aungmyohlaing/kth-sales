@@ -1,9 +1,9 @@
 "use strict";
 const router = require("express").Router();
 var customer = require("../models/customer");
-var dailycollection = require("../models/collection");
-var newvoucher = require("../models/newvoucher");
-var returnitem = require("../models/returnitem");
+var dailyCollection = require("../models/collection");
+var newVoucher = require("../models/newvoucher");
+var returnItem = require("../models/returnitem");
 
 /**
  * Customer app Routes
@@ -34,7 +34,19 @@ router.route('/customer')
 
             res.json({ message: 'Successfully added!' });
         })
-    });
+    })
+    .delete(function (req, res) {
+        customer.deleteOne({ _id: req.body.customerid }, function (err, data) {
+          if (err) res.send(err);
+            
+
+          dailyCollection.deleteOne({ "customerid": req.body.customerid});
+          newVoucher.deleteOne({ "customerid": req.body.customerid});
+          returnItem.deleteOne({ "customerid": req.body.customerid});
+          
+          res.json({ message: "Successfully delete!" });
+        });
+      });
 
 router.route('/customer/return')
     .get(function (req, res) {
@@ -59,7 +71,7 @@ router.route('/customer/getById')
 
 router.route('/customer/getdaily')
     .post(function (req, res) {
-        var query = dailycollection.find({ customerid: req.body.customerid }).sort({ collectiondate: -1 }).limit(6);
+        var query = dailyCollection.find({ customerid: req.body.customerid }).sort({ collectiondate: -1 }).limit(6);
         query.exec(function (err, data) {
             if (err) res.send(err);
             res.json(data);
@@ -68,7 +80,7 @@ router.route('/customer/getdaily')
 
 router.route('/customer/getnewvoucher')
     .post(function (req, res) {
-        var query = newvoucher.find({ customerid: req.body.customerid, quantity: { "$gt": 0 } }).sort({ voucherdate: -1 }).limit(6);
+        var query = newVoucher.find({ customerid: req.body.customerid, quantity: { "$gt": 0 } }).sort({ voucherdate: -1 }).limit(6);
         query.exec(function (err, data) {
             if (err) res.send(err);
             res.json(data);
@@ -76,7 +88,7 @@ router.route('/customer/getnewvoucher')
     })
 router.route('/customer/getreturnitem')
     .post(function (req, res) {
-        var query = returnitem.find({ customerid: req.body.customerid }).sort({ returndate: -1 }).limit(6);
+        var query = returnItem.find({ customerid: req.body.customerid }).sort({ returndate: -1 }).limit(6);
         query.exec(function (err, data) {
             if (err) res.send(err);
             res.json(data);

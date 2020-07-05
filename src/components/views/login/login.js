@@ -140,7 +140,7 @@ export default class login extends Component {
                         </Row>
                     </div>
                 </div>
-                <div style={{ position: 'fixed', top: 'calc(100% - 80px)', width: '100%' }}>
+                <div style={{ position: 'fixed', top: 'calc(100% - 88px)', width: '100%' }}>
                     <Footer />
                 </div>
                 

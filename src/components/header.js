@@ -2,14 +2,31 @@ import React, { Component } from "react";
 import {
   Nav,
   Navbar,
-  NavDropdown,
+  Button,
   Image,
   Row,
-  Col
+  Col,
+  Dropdown,
 } from "react-bootstrap";
 import Storage from "../components/commons/localStogare";
 import { Link } from "react-router-dom";
 import usericon from "../components/images/man.png";
+
+const CustomToogle = React.forwardRef(({ children, onClick }, ref) => (
+
+  <Button
+    variant="link"
+    size="sm"    
+    ref={ref}
+    style={{ boxShadow: 'none' }}
+    onClick={(e) => {
+      e.preventDefault();
+      onClick(e);
+    }}
+  >
+    {children}    
+  </Button>  
+));
 
 export default class Header extends Component {
   constructor(props) {
@@ -44,15 +61,12 @@ export default class Header extends Component {
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
-              <NavDropdown title="Customer" id="collasible-nav-dropdown">
-                <NavDropdown.Item as={Link} to="/customer/list">
-                  Customer List
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item as={Link} to="/customer/add">
-                  Add Customer
-                </NavDropdown.Item>
-              </NavDropdown>
+              <Nav.Link as={Link} to="/customer/add">
+                Add customer
+              </Nav.Link>
+              <Nav.Link as={Link} to="/customer/list">
+                Customers
+              </Nav.Link>
               <Nav.Link as={Link} to="/collection">
                 Collection
               </Nav.Link>
@@ -72,8 +86,34 @@ export default class Header extends Component {
             </Nav>
 
             <Nav>
-              
-              <NavDropdown
+              <Dropdown                
+                alignRight
+              >
+                <Dropdown.Toggle as={CustomToogle} >
+                  <span>
+                    <Image src={usericon} />
+                  </span>
+                </Dropdown.Toggle>
+                <Dropdown.Menu size="sm" title="" >
+                  <Dropdown.Header className="text-center">
+                    <Row style={{ marginBottom: "10px" }}>
+                      <Col className="user-info-menuitem">
+                        <Image src={usericon} />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>{this.state.userinfo.fullname}</Col>
+                    </Row>
+                    <Row>
+                      <Col>{this.state.userinfo.email}</Col>
+                    </Row>
+                  </Dropdown.Header>
+                  <Dropdown.Divider></Dropdown.Divider>
+                  <Dropdown.Item as={Link} to="/customer/list" ><i className="fa fa-gear fa-fw"></i> Settings</Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/login" onClick={this.onLogout}><i className="fa fa-sign-out fa-fw"></i> Logout</Dropdown.Item>                  
+                </Dropdown.Menu>
+              </Dropdown>
+              {/* <NavDropdown
                 title={
                   <span>
                     <Image src={usericon} />
@@ -96,24 +136,17 @@ export default class Header extends Component {
                   </Row>
                 </NavDropdown.Header>
                 <NavDropdown.Divider />
-                <NavDropdown.Item
-                  as={Link}
-                  to="/customer/list"                  
-                >
+                <NavDropdown.Item as={Link} to="/customer/list">
                   <i className="fa fa-gear fa-fw"></i> Settings
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item
-                  as={Link}
-                  to="/login"
-                  onClick={this.onLogout}                  
-                >
+                <NavDropdown.Item as={Link} to="/login" onClick={this.onLogout}>
                   <i className="fa fa-sign-out fa-fw"></i> Logout
                 </NavDropdown.Item>
-              </NavDropdown>
-            </Nav>            
+              </NavDropdown> */}
+            </Nav>
           </Navbar.Collapse>
-        </Navbar>        
+        </Navbar>
       </div>
     );
   }

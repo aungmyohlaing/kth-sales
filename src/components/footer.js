@@ -4,7 +4,7 @@ import { Navbar } from "react-bootstrap";
 export default class Footer extends Component {
   render() {
     return (
-      <Navbar id="footer" bg="info" variant="info" sticky="bottom">
+      <Navbar id="footer" bg="info" variant="info" sticky="bottom" style={{ height: '100px' }}>
         <Navbar.Collapse className="justify-content-center">
           <Navbar.Text className="text-center" style={{ color: "white" }}>
             &copy; Copyright 2020 KTH

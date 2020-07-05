@@ -71,7 +71,7 @@ export default class monthlyTopItems extends Component {
       }
     }
     return (
-      <Row>
+      <Row style={{ marginBottom: '15px' }}>
         <Col sm={12}>
           <Card>
             <Card.Header style={{ fontSize: '14px' }}>{title}</Card.Header>

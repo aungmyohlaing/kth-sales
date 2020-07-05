@@ -80,5 +80,17 @@ export default service => ({
             console.log(err);
             return null;
         }
+    },
+    deleteCustomer(v){
+        try{           
+            return axios.delete('/api/customer', { data: { customerid: v } })
+            .then(res => {               
+                return res.data;
+            })
+        }
+        catch (e){
+            console.log('Delete Error', e)
+            return null
+        }
     }
 })
