@@ -29,6 +29,7 @@ const Main = () => (
                 <Route exact path="/capital" component={Capital}/>
                 <Route exact path="/collection" component={Collection}/>
                 <Route exact path="/newvoucher" component={NewVoucher}/>
+                <Route exact path="/newvoucher/:id" component={NewVoucher}/>
                 <Route exact path="/reset" component={ResetPassword}/>
                 <Route exact path="/returnitems" component={ReturnItems}/>
                 <Route exact path="/users" component={Users}/>

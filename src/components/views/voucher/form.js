@@ -9,17 +9,23 @@ import {
   Popover,
   OverlayTrigger,
 } from "react-bootstrap";
+import { connect } from "react-redux";
 import DateTimePicker from "../../commons/datepicker";
 import moment from "moment";
 import Select from "../../commons/selectComponet";
 import SaveAlert from "../../commons/alert";
 import Service from "./service";
+import { LoadCustomerById } from "../../../redux/actions";
 
-export default class frmVoucher extends Component {
+class frmVoucher extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      CustomerObj: {
+        value: "",
+        label: "",
+      },
       voucherdate: new Date(),
       voucherno: "",
       itemno: "",
@@ -65,14 +71,6 @@ export default class frmVoucher extends Component {
     this.onCancelClick = this.onCancelClick.bind(this);
     this.selectedItemsHandleChange = this.selectedItemsHandleChange.bind(this);
   }
-
-  // componentDidMount() {
-  //     if (this.props.formtype === 'newvoucher'){
-  //         this.setState({ selectTo: 'customers' });
-  //         console.log("Select To", this.state.selectTo);
-  //     }
-  //     else this.setState({ selectTo: 'return-customers' });
-  // }
 
   /**
    *
@@ -340,13 +338,65 @@ export default class frmVoucher extends Component {
       voucherData: "",
       itemsData: "",
       currentqty: "",
-      validated: false
+      validated: false,
     });
   }
 
   render() {
     var self = this;
-    const { formtype } = this.props;
+    const { formtype, param } = this.props;
+
+    const RenderCustomer = () => {
+      if (param) {
+        if (param.id) {
+          // Get Customer from Redux by Customer Id
+
+          /** only when refresh called redux again to load customer */
+          if (Object.keys(self.props.customer).length === 0)
+            this.props.LoadCustomerById(param.id);
+
+          self.state.selectedOptions = {
+            label: self.props.customer.name,
+            value: self.props.customer._id,
+          };
+
+          return (
+            <div
+              style={{
+                fontSize: "30px",
+                color: "black",
+                fontWeight: "300",
+                textAlign: "center",
+              }}
+            >
+              {self.state.selectedOptions.label}
+            </div>
+          );
+        }
+      }
+      return (
+        <div>
+          <Select
+            selectedOptions={self.state.selectedOptions}
+            selectedHandleChange={self.selectedHandleChange}
+            placeHolder="Select a customer"
+            selectTo={formtype}
+          />
+          <Form.Control
+            type="text"
+            name="selectCustomer"
+            onChange={self.onhandlerChange}
+            value={self.state.selectedOptions}
+            placeholder="Customer"
+            style={{ opacity: "0", position: "absolute" }}
+            required
+          ></Form.Control>
+          <Form.Control.Feedback type="invalid">
+            Customer is required.
+          </Form.Control.Feedback>
+        </div>
+      );
+    };
     /**
      * Show pop up messages on price and quantity
      */
@@ -363,24 +413,7 @@ export default class frmVoucher extends Component {
             <Col sm={12} md={6} lg={6}>
               <Form.Group>
                 <Form.Label>Customers</Form.Label>
-                <Select
-                  selectedOptions={this.state.selectedOptions}
-                  selectedHandleChange={this.selectedHandleChange}
-                  placeHolder="Select a customer"
-                  selectTo={formtype}
-                />
-                <Form.Control
-                  type="text"
-                  name="selectCustomer"
-                  onChange={this.onhandlerChange}
-                  value={this.state.selectedOptions}
-                  placeholder="Customer"
-                  style={{ opacity: "0", position: "absolute" }}
-                  required
-                ></Form.Control>
-                <Form.Control.Feedback type="invalid">
-                  Customer is required.
-                </Form.Control.Feedback>
+                <RenderCustomer />
               </Form.Group>
             </Col>
             <Col sm={12} md={6} lg={6}>
@@ -621,3 +654,17 @@ export default class frmVoucher extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    customer: state.customer,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    LoadCustomerById: (id) => dispatch(LoadCustomerById(id)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(frmVoucher);

@@ -2,6 +2,7 @@
 
 const auth = require("express").Router();
 var user = require("../models/user");
+var CryptoJS = require("crypto-js");
 
 auth.route("/auth").post(function (req, res) {
   var User = new user();
@@ -10,8 +11,10 @@ auth.route("/auth").post(function (req, res) {
     if (err) res.send(err);
 
     if (user !== null) {
-      let hashPwd = user.password;
-      var comparePwd = User.validPassword(req.body.password, hashPwd);
+      // let hashPwd = user.password;
+      var decryptPwd = CryptoJS.AES.decrypt(req.body.password, "ENCRYPT786E").toString(CryptoJS.enc.Utf8);
+     
+      var comparePwd = User.validPassword(decryptPwd, user.password);
       if (comparePwd) {
         res.json(user);
       } else res.json(null);

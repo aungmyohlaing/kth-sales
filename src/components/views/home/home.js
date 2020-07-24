@@ -5,10 +5,12 @@ import Footer from "../../footer";
 import Storage from "../../../components/commons/localStogare";
 import Services from "./service";
 import Charts from "../../charts/chart";
-import UserCards from "../../commons/userCard";
+import CustomerCards from "../../commons/customerCard";
 import AverageByPeriod from "./averagePurchase";
 import AverageReturnByPeriod from "./averageReturn";
 import MonthlyTopItems from "./monthlyTopItems";
+import CustomerService from "../customers/service";
+import DeleteModal from "../../commons/modal";
 
 export default class Home extends Component {
   constructor(props) {
@@ -36,7 +38,20 @@ export default class Home extends Component {
       lastMonthTotalReturn: "",
       currentYearTotalReturn: "",
       lastYearTotalReturn: "",
+      cusId: "",
+      isModalShow: false,
+      modalBodyText: [
+        {
+          heading: "Are you sure to delete this customer?",
+          bodyText:
+            "It will delete all the reference of this customer as well.",
+        },
+      ],
     };
+
+    this.handleModalClose = this.handleModalClose.bind(this);
+    this.handleModalShow = this.handleModalShow.bind(this);
+    this.onYesClick = this.onYesClick.bind(this);
   }
 
   /**
@@ -56,6 +71,30 @@ export default class Home extends Component {
     }
   }
 
+  handleModalClose() {
+    this.setState({ isModalShow: false });
+  }
+
+  handleModalShow(id) {
+    this.setState({ isModalShow: true, cusId: id });
+    // console.log("Customer ID", id);
+  }
+
+  onYesClick() {   
+    CustomerService()
+      .deleteCustomer(this.state.cusId)
+      .then(() => {
+        this.handleModalClose();
+        //history.push("/customer/list");
+        //location.href("/customer/list");
+        Services()
+        .getTopTen()
+        .then((res) => {
+          this.setState({ topten: res });
+        });
+      });
+  }
+
   render() {
     return (
       <div>
@@ -65,7 +104,7 @@ export default class Home extends Component {
             <h2>Sales</h2>
             <hr />
             <Row>
-              <Col sm={12} md={3} lg={3}>
+              <Col sm={12} md={12} lg={3}>
                 <AverageByPeriod
                   title="Average Purchase By Month"
                   description="Compare to last month"
@@ -81,7 +120,7 @@ export default class Home extends Component {
                   title="This Month Top Selling Items"
                 />
               </Col>
-              <Col sm={12} md={9} lg={9}>                
+              <Col sm={12} md={12} lg={9}>                
                 <Charts
                   type="bar"
                   height={167}
@@ -94,7 +133,7 @@ export default class Home extends Component {
             <h2>Returns</h2>
             <hr/>
             <Row>
-              <Col sm={12} md={3} lg={3}>
+              <Col sm={12} md={12} lg={3}>
                 <AverageReturnByPeriod
                   title="Average Return By Month"
                   description="Compare to last month"
@@ -111,7 +150,7 @@ export default class Home extends Component {
                 />
               </Col>
 
-              <Col sm={12} md={9} lg={9}>
+              <Col sm={12} md={12} lg={9}>
                 <Charts
                   type="doughnut"
                   chartfor="return"
@@ -124,9 +163,16 @@ export default class Home extends Component {
             <h2>Top Ten Customers</h2>
             <hr />
             <Row >
-              <UserCards dataList={this.state.topten} />
+              <CustomerCards dataList={this.state.topten} handleModalShow={this.handleModalShow} />
             </Row>
           </div>
+          <DeleteModal
+            show={this.state.isModalShow}
+            title={"Customer Deleting..."}
+            bodyText={this.state.modalBodyText}
+            onNo={this.handleModalClose}
+            onYes={this.onYesClick}
+          />
         </div>
         <Footer />
       </div>

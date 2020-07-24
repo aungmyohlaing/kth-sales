@@ -4,8 +4,9 @@ import {
     DELETE_USER, 
     ITEMS_IS_LOADING, 
     SHOW_MODAL,
-    GET_USER_ID } from '../constants/action-types';
+    GET_USER_ID, LOAD_CUSTOMER_BY_ID } from '../constants/action-types';
 import Storage from '../../components/commons/localStogare';
+import customerService from '../../components/views/customers/service';
 
 export function itemsIsLoading(bool) {
     return {
@@ -73,3 +74,26 @@ export function DeleteUser(id) {
         
     }
 }
+/**
+ * Customer Action
+ */
+
+ export function LoadCustomerSuccess(customer){
+     return {
+         type: LOAD_CUSTOMER_BY_ID,
+         customer
+     }
+ }
+
+ export function LoadCustomerById(id) {
+     return (dispatch) => {
+         customerService().getById(id)
+         .then(res => {
+             //console.log("Return Customer in Redux", res);
+             dispatch(LoadCustomerSuccess(res));
+             //return res
+         })
+         
+        
+     }
+ }

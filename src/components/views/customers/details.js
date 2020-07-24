@@ -9,12 +9,22 @@ import DeleteModal from "../../commons/modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { LoadCustomerById } from "../../../redux/actions";
+import Storage from "../../commons/localStogare";
+import Loading from "../../commons/loading";
 
 const CustomToogle = React.forwardRef(({ children, onClick }, ref) => (
   <Button
     variant="link"
     size="sm"
-    style={{ color: 'white', textDecoration: 'none', boxShadow: 'none', width: '30px', height: '40px' }}
+    style={{
+      color: "white",
+      textDecoration: "none",
+      boxShadow: "none",
+      width: "30px",
+      height: "40px",
+    }}
     ref={ref}
     onClick={(e) => {
       e.preventDefault();
@@ -26,9 +36,7 @@ const CustomToogle = React.forwardRef(({ children, onClick }, ref) => (
   </Button>
 ));
 
-
-
-export default class Detail extends Component {
+class Detail extends Component {
   constructor(props) {
     super(props);
 
@@ -77,6 +85,19 @@ export default class Detail extends Component {
         },
       ],
       isModalShow: false,
+      modalBodyText: [
+        {
+          heading: "Are you sure to delete this customer?",
+          bodyText:
+            "It will delete all the reference of this customer as well.",
+        },
+      ],
+      userinfo: {
+        fullname: "",
+        email: "",
+        usertype: "",
+      },
+      Loading: false,
     };
 
     this.handleModalClose = this.handleModalClose.bind(this);
@@ -104,15 +125,14 @@ export default class Detail extends Component {
   }
 
   componentDidMount() {
+    const userinfo = Storage(localStorage).get("userinfo");
+    this.setState({ userinfo: userinfo, Loading: true });
     const {
       match: { params },
     } = this.props;
 
-    Service()
-      .getById(params.id)
-      .then((res) => {
-        this.setState({ customer: res });
-      });
+    // Get Customer from Redux by Customer Id
+    this.props.LoadCustomerById(params.id);
 
     Service()
       .getDailyCollection(params.id)
@@ -129,7 +149,7 @@ export default class Detail extends Component {
     Service()
       .getReturnItems(params.id)
       .then((res) => {
-        this.setState({ returnitem: res });
+        this.setState({ returnitem: res, Loading: false });        
       });
   }
 
@@ -166,7 +186,7 @@ export default class Detail extends Component {
       return (
         <div>
           <Row>
-            <Col sm={12} md={4} lg={4}>
+            <Col sm={12} md={12} lg={4}>
               <Card
                 bg="info"
                 text="light"
@@ -176,12 +196,12 @@ export default class Detail extends Component {
                 <Card.Header as="h4">Sales Amount</Card.Header>
                 <Card.Body>
                   <Card.Text as="h5">
-                    {self.state.customer.salesamount} MMK
+                    {self.props.customer.salesamount} MMK
                   </Card.Text>
                 </Card.Body>
               </Card>
             </Col>
-            <Col sm={12} md={4} lg={4}>
+            <Col sm={12} md={12} lg={4}>
               <Card
                 bg="info"
                 text="light"
@@ -191,14 +211,14 @@ export default class Detail extends Component {
                 <Card.Header as="h4">Paid Amount</Card.Header>
                 <Card.Body>
                   <Card.Text as="h5">
-                    {self.state.customer.salesamount -
-                      self.state.customer.currentamount}{" "}
+                    {self.props.customer.salesamount -
+                      self.props.customer.currentamount}{" "}
                     MMK
                   </Card.Text>
                 </Card.Body>
               </Card>
             </Col>
-            <Col sm={12} md={4} lg={4}>
+            <Col sm={12} md={12} lg={4}>
               <Card
                 bg="info"
                 text="light"
@@ -208,7 +228,7 @@ export default class Detail extends Component {
                 <Card.Header as="h4">Remaining Amount</Card.Header>
                 <Card.Body>
                   <Card.Text as="h5">
-                    {self.state.customer.currentamount} MMK
+                    {self.props.customer.currentamount} MMK
                   </Card.Text>
                 </Card.Body>
               </Card>
@@ -356,22 +376,26 @@ export default class Detail extends Component {
     return (
       <div>
         <Header />
+        { this.state.Loading ? (<Loading />) : (
         <div id="mainview" className="container">
           <div>
             <h2>
               Customer <small>Detail</small>
             </h2>
-            <div className="text-right" style={{ marginTop: "-40px" }}>
-              <Button variant="Link" style={{ color: "silver",boxShadow: 'none', height: '20px' }}
-                onClick={this.handleModalShow} >
+            {/* <div className="text-right" style={{ marginTop: "-40px" }}>
+              
+              <Button
+                variant="Link"
+                style={{ color: "silver", boxShadow: "none", height: "20px" }}
+                onClick={this.handleModalShow}
+              >
                 <FontAwesomeIcon icon={faTrashAlt} />
               </Button>
-              
-            </div>
+            </div> */}
           </div>
           <hr />
           <Row>
-            <Col xs={12} sm={12} md={3} lg={3}>
+            <Col xs={12} sm={12} md={4} lg={3}>
               <Card
                 bg="dark"
                 text="light"
@@ -383,10 +407,25 @@ export default class Detail extends Component {
                 >
                   <Dropdown.Toggle as={CustomToogle} />
                   <Dropdown.Menu size="sm" title="">
-                    <Dropdown.Item>Sales</Dropdown.Item>
+                    <Dropdown.Item
+                      as={Link}
+                      to={"/newvoucher/" + this.props.customer._id}
+                    >
+                      Sales
+                    </Dropdown.Item>
                     <Dropdown.Item>Collect</Dropdown.Item>
                     <Dropdown.Item>Returns</Dropdown.Item>
-                    <Dropdown.Item>Delete</Dropdown.Item>
+                    {this.state.userinfo.usertype === "Admin" ? (
+                      <div>
+                        <Dropdown.Divider />
+                        <Dropdown.Item onClick={this.handleModalShow}>
+                          {" "}
+                          <FontAwesomeIcon icon={faTrashAlt} /> Delete
+                        </Dropdown.Item>
+                      </div>
+                    ) : (
+                      ""
+                    )}
                   </Dropdown.Menu>
                 </Dropdown>
                 <Card.Img
@@ -404,51 +443,66 @@ export default class Detail extends Component {
                 <Card.Body style={{ padding: "5px !important" }}>
                   <Card.Text>
                     <strong>Name: </strong>
-                    {this.state.customer.name}
+                    {this.props.customer.name}
                   </Card.Text>
-                  {this.state.customer.email !== "" ? (
+                  {this.props.customer.email !== "" ? (
                     <Card.Text>
                       <strong>Email: </strong>
-                      {this.state.customer.email}
+                      {this.props.customer.email}
                     </Card.Text>
                   ) : null}
                   <Card.Text>
                     <strong>Mobile: </strong>
-                    {this.state.customer.mobile}
+                    {this.props.customer.mobile}
                   </Card.Text>
-                  {this.state.customer.phone !== "" ? (
+                  {this.props.customer.phone !== "" ? (
                     <Card.Text>
                       <strong>Phone: </strong>
-                      {this.state.customer.phone}
+                      {this.props.customer.phone}
                     </Card.Text>
                   ) : null}
                   <Card.Text>
                     <strong>Address 1: </strong>
-                    {this.state.customer.address1}
+                    {this.props.customer.address1}
                   </Card.Text>
-                  {this.state.customer.address2 !== "" ? (
+                  {this.props.customer.address2 !== "" ? (
                     <Card.Text>
                       <strong>Address 2: </strong>
-                      {this.state.customer.address2}
+                      {this.props.customer.address2}
                     </Card.Text>
                   ) : null}
                 </Card.Body>
               </Card>
             </Col>
-            <Col xs={12} sm={12} md={9} lg={9}>
+            <Col xs={12} sm={12} md={8} lg={9}>
               <RenderDetailOrEmpty />
             </Col>
           </Row>
           <DeleteModal
             show={this.state.isModalShow}
             title="Customer Deleting..."
-            bodytext="Are you sure to delete this customer?"
+            bodyText={this.state.modalBodyText}
             onNo={this.handleModalClose}
             onYes={this.onYesClick}
           />
         </div>
+        )}
         <Footer />
       </div>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    customer: state.customer,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    LoadCustomerById: (id) => dispatch(LoadCustomerById(id)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Detail);

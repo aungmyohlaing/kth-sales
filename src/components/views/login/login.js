@@ -7,6 +7,10 @@ import Footer from '../../footer';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
 
+
+var CryptoJS = require("crypto-js");
+
+
 export default class login extends Component {
 
     constructor(props) {
@@ -59,14 +63,17 @@ export default class login extends Component {
         else {
             const { history } = this.props;
             this.setState({ validated: false })
+
+            var encrypted = CryptoJS.AES.encrypt(this.state.password, "ENCRYPT786E").toString() ;                        
             //let loginError;            
             let userdata = {
                 username: this.state.username,
-                password: this.state.password
+                password: encrypted
             }
 
             axios.post('/api/auth', userdata)
-                .then(res => {                    
+                .then(res => {   
+                    
                     if (res.data !== null) {
                         Storage(localStorage).set('loggedIn', true);
                         

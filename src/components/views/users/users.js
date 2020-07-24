@@ -10,6 +10,15 @@ class UserList extends Component {
    
     constructor(props){
         super(props)
+
+        this.state ={
+            modalBodyText: [
+                {
+                  heading: 'Are you sure to delete this customer?',
+                  bodyText: ''
+                }
+              ]
+        }
         
         this.handleModalClose = this.handleModalClose.bind(this);
         this.handleModalShow = this.handleModalShow.bind(this);
@@ -79,7 +88,7 @@ class UserList extends Component {
                 </Table>
                 <DeleteModal show={this.props.showModal}
                     title="User Deleting..."
-                    bodytext="Are you sure to delete this user?"
+                    bodyText={this.state.modalBodyText}
                     onNo={this.handleModalClose}
                     onYes={this.onYesClick} />
             </div>

@@ -61,9 +61,9 @@ export default class Header extends Component {
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Link as={Link} to="/customer/add">
+              {/* <Nav.Link as={Link} to="/customer/add">
                 Add customer
-              </Nav.Link>
+              </Nav.Link> */}
               <Nav.Link as={Link} to="/customer/list">
                 Customers
               </Nav.Link>
