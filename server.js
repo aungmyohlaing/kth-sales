@@ -15,11 +15,7 @@ var env = require('dotenv').load();
  * Moogo DB Connection
  */
 //Local MongoDB Connection
-//mongoose.connect('mongodb://192.168.1.34/kth');
 //  mongoose.connect(process.env.LOCAL,{useNewUrlParser: true, useUnifiedTopology: true});
-// mongoose.connect('mongodb://kth:WlPFZhgaiMSEuFoYXGHb73GbDX04vndb1GPwhBfeKxqC1swLqcDUWgdvpoeP7JKnBgXsEgD9QnkWLwFbvCVekw%3D%3D@kth.documents.azure.com:10255/?ssl=true&replicaSet=globaldb');
-// MS Azure Cosmosdb Connection
-// mongoose.connect(process.env.COSMOSDB_CONSTR+process.env.COSMOSDB_DBNAME+"?ssl=true&replicaSet=globaldb");
 // MongoDB Atlas Connection
 mongoose.connect(process.env.ATLAS_CONSTR), {useNewUrlParser: true, useUnifiedTopology: true};
 var db = mongoose.connection;
