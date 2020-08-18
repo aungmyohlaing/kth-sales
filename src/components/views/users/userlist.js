@@ -21,7 +21,7 @@ export default class Users extends Component {
         return (
             <div>
                 <Header />
-                <div id="mainview" className="container" style={{'marginBottom':'162px'}}>
+                <div id="mainview" className="container" >
                     <h2>Users <small>user lists</small></h2>
                     <hr/>
                     <div style={{ marginBottom: "20px" }}>
@@ -30,8 +30,11 @@ export default class Users extends Component {
                         </ButtonToolbar>
                     </div>                   
                     <UserList />
-                </div>                
+                </div>  
+                
                 <Footer />
+                            
+                
             </div>
         )
     }

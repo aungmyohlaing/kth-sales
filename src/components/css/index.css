@@ -2,11 +2,13 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+  height: 100%;
 }
 
 #mainview {
   margin-top:50px;
-  margin-bottom:100px;
+  margin-bottom:100px; 
+  min-height: calc(100vh - 308px);
 }
 
 a:hover{

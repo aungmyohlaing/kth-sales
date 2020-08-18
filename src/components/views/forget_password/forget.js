@@ -59,7 +59,7 @@ export default class ForgetPassword extends Component {
 
     if (this.state.email === "" || this.state.email === null) {
       this.setState({ validated: true });
-    } else if (!validEmail) {      
+    } else if (!validEmail) {
       this.setState({ validated: true, emailValidation: true });
     } else if (this.state.password === "" || this.state.password === null) {
       this.setState({ validated: true });
@@ -103,7 +103,7 @@ export default class ForgetPassword extends Component {
     }
   }
 
-  render() {    
+  render() {
     function ShowAlert(props) {
       if (!props.show) {
         return null;
@@ -131,7 +131,7 @@ export default class ForgetPassword extends Component {
     function EmailValidated(props) {
       if (!props.show) {
         return <div>Email is required.</div>;
-      }     
+      }
 
       return <div>Email is incorrect format.</div>;
     }
@@ -154,9 +154,9 @@ export default class ForgetPassword extends Component {
             </Nav>
           </Navbar.Collapse>
         </Navbar>
-        <div
+        <div id="mainview"
           className="container"
-          style={{ marginTop: "35px", marginBottom: "82px" }}
+
         >
           <div>
             <Row className="justify-content-center">
@@ -268,9 +268,7 @@ export default class ForgetPassword extends Component {
             </Row>
           </div>
         </div>
-        <div style={{ position: 'fixed', top: 'calc(100% - 88px)', width: '100%' }}>
         <Footer />
-        </div>
       </div>
     );
   }

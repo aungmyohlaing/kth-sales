@@ -129,7 +129,16 @@ export default class register extends Component {
         return (
             <div>
                 <Header />
-                <div className="container">
+                {/* <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                <Navbar.Brand as={Link} to="/home">KTH</Navbar.Brand>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
+                    <Nav>
+                        <Nav.Link as={Link} to='/login'>Login</Nav.Link>
+                    </Nav>
+                </Navbar.Collapse>
+                </Navbar> */}
+                <div id="mainview" className="container">
                     <div className="container" style={{ 'marginTop': '50px', 'marginBottom':'25px'}}>
                         <div>
                             <Row className="justify-content-center">

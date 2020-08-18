@@ -13,6 +13,7 @@ import NewVoucher from './voucher/newVoucher';
 import ResetPassword from './forget_password/forget';
 import ReturnItems from './voucher/returnitems';
 import Users from './users/userlist';
+import RegisAdmin from './register/regisAdmin';
 
 const Main = () => (
     <main>
@@ -33,6 +34,7 @@ const Main = () => (
                 <Route exact path="/reset" component={ResetPassword}/>
                 <Route exact path="/returnitems" component={ReturnItems}/>
                 <Route exact path="/users" component={Users}/>
+                <Route exact path="/register/admin" component={RegisAdmin}/>
             </Switch>
         </Router>
     </main>

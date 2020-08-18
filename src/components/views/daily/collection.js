@@ -15,11 +15,9 @@ export default class DailyCollection extends Component {
           <hr />
           <CollectionForm />
         </div>
-        <div
-          style={{ position: "fixed", top: "calc(100% - 80px)", width: "100%" }}
-        >
+        
           <Footer />
-        </div>
+       
       </div>
     );
   }

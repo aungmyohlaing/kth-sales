@@ -125,7 +125,7 @@ export default class login extends Component {
                     </Nav>
                 </Navbar.Collapse>
                 </Navbar>
-                <div className="container" style={{ 'marginTop': '35px','marginBottom':'95px' }}  >
+                <div id="mainview" className="container" >
                     <div>
                         <Row className="justify-content-center" >
                             <Col xs={12} sm={12} md={7} lg={5} >
@@ -146,11 +146,8 @@ export default class login extends Component {
                             </Col>
                         </Row>
                     </div>
-                </div>
-                <div style={{ position: 'fixed', top: 'calc(100% - 88px)', width: '100%' }}>
-                    <Footer />
-                </div>
-                
+                </div>               
+                <Footer />                               
             </div>
         )
     }

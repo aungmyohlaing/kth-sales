@@ -118,7 +118,7 @@ export default class CustomerList extends Component {
       <div>
         <Header />
         {this.state.Loading ? (<Loading />) : (
-        <div id="mainview" className="container">
+        <div id="mainview" className="container" >
           <h2>
             Customer <small>List</small>
           </h2>
@@ -161,6 +161,7 @@ export default class CustomerList extends Component {
             onNo={this.handleModalClose}
             onYes={this.onYesClick}
           />
+          
         </div>
         )}
         <Footer />
