@@ -15,9 +15,9 @@ var env = require('dotenv').load();
  * Moogo DB Connection
  */
 //Local MongoDB Connection
-mongoose.connect(process.env.LOCAL,{useNewUrlParser: true, useUnifiedTopology: true});
+// mongoose.connect(process.env.LOCAL,{useNewUrlParser: true, useUnifiedTopology: true});
 // MongoDB Atlas Connection
-// mongoose.connect(process.env.ATLAS_CONSTR), {useNewUrlParser: true, useUnifiedTopology: true};
+mongoose.connect(process.env.ATLAS_CONSTR), {useNewUrlParser: true, useUnifiedTopology: true};
 var db = mongoose.connection;
 //bind error info
 db.on('error', console.error.bind(console, 'connection error:'));
